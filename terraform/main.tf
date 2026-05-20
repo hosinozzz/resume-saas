@@ -81,7 +81,9 @@ module "cloudfront" {
   project_name                         = var.project_name
   environment                          = var.environment
   acm_certificate_arn                  = aws_acm_certificate_validation.resumeai_jp.certificate_arn
-  aliases                              = ["resumeai.jp", "www.resumeai.jp"]
+  # CNAMEコンフリクト解消後に "resumeai.jp" を追加 → apex→wwwリダイレクトが有効になる
+  # aliases = ["resumeai.jp", "www.resumeai.jp"]
+  aliases                              = ["www.resumeai.jp"]
 }
 
 # ──────────────────────────────────────────

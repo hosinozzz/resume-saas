@@ -31,6 +31,12 @@ resource "aws_cloudfront_distribution" "this" {
 
     cache_policy_id          = data.aws_cloudfront_cache_policy.caching_optimized.id
     origin_request_policy_id = data.aws_cloudfront_origin_request_policy.cors_s3.id
+
+    # apex (resumeai.jp) → www 301リダイレクト
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.apex_redirect.arn
+    }
   }
 
   # SPAルーティング: 403 (S3の404相当) をindex.htmlで返す
@@ -46,14 +52,22 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
 
-  # aliasesはassociate-alias CLIで手動追加後に有効化する
-  # aliases = length(var.aliases) > 0 ? var.aliases : null
+  aliases = length(var.aliases) > 0 ? var.aliases : null
 
   viewer_certificate {
     acm_certificate_arn      = var.acm_certificate_arn
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2021"
   }
+}
+
+# resumeai.jp → https://www.resumeai.jp 301リダイレクト用 CloudFront Function
+resource "aws_cloudfront_function" "apex_redirect" {
+  name    = "${var.project_name}-${var.environment}-apex-redirect"
+  runtime = "cloudfront-js-2.0"
+  comment = "resumeai.jp apex → www 301リダイレクト"
+  publish = true
+  code    = file("${path.module}/functions/apex_redirect.js")
 }
 
 # AWSマネージドキャッシュポリシー（静的ファイルに最適化）
