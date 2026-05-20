@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>プライバシーポリシー — ResumeAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.legal-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 7rem 1.5rem 5rem;
+}
+.legal-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem; letter-spacing: .24em; color: var(--cyan); margin-bottom: .8rem;
+}
+.legal-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: .08em; margin-bottom: .5rem;
+}
+.legal-meta {
+  font-size: .8rem; color: var(--gray); margin-bottom: 3rem;
+  border-bottom: 1px solid var(--border); padding-bottom: 1.5rem;
+}
+.legal-section {
+  margin-bottom: 2.4rem;
+}
+.legal-section h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem; letter-spacing: .18em; color: var(--cyan);
+  margin-bottom: .85rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--border);
+}
+.legal-section p,
+.legal-section li {
+  font-size: .9rem;
+  color: var(--white);
+  line-height: 1.85;
+}
+.legal-section ul,
+.legal-section ol {
+  padding-left: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.legal-section li { color: var(--white); }
+.legal-section small {
+  display: block;
+  font-size: .78rem;
+  color: var(--gray);
+  margin-top: .4rem;
+}
+.legal-highlight {
+  padding: 1rem 1.3rem;
+  border: 1px solid rgba(0,212,255,.2);
+  border-radius: var(--radius);
+  background: rgba(0,212,255,.04);
+  margin-top: 1rem;
+  font-size: .85rem;
+  color: var(--gray);
+  line-height: 1.8;
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Resume<span>AI</span></a>
+  <a href="index.html#upload" class="btn btn-outline" style="padding:.4rem 1rem;font-size:.82rem;">今すぐ作る →</a>
+</nav>
+
+<main class="legal-page">
+  <p class="legal-eyebrow">PRIVACY POLICY</p>
+  <h1 class="legal-title">プライバシーポリシー</h1>
+  <p class="legal-meta">最終更新: 2026年5月20日 &nbsp;|&nbsp; 星野 在原（ResumeAI 運営者）</p>
+
+  <div class="legal-section">
+    <h2>01 — 取得する情報</h2>
+    <p>当サービスでは、以下の情報を取得します。</p>
+    <ul>
+      <li>アップロードいただいた履歴書・職務経歴書ファイルの内容</li>
+      <li>クレジットカード決済時にStripe社を通じて処理されるメールアドレス（当サービスは直接保持しません）</li>
+      <li>サービス利用時のIPアドレス（不正利用防止のレート制限目的）</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>02 — 利用目的</h2>
+    <p>取得した情報は以下の目的にのみ使用します。</p>
+    <ul>
+      <li>HTMLポートフォリオ生成サービスの提供</li>
+      <li>生成結果のお届け（署名付きダウンロードURLの発行）</li>
+      <li>不正アクセス・過剰利用の防止</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>03 — AI技術の利用</h2>
+    <p>
+      当サービスは、アップロードいただいた履歴書の内容を改善・再構成するためにAI技術を活用しています。
+      利用しているAIサービスの具体的な名称は公開しておりません。
+    </p>
+    <div class="legal-highlight">
+      アップロードされたファイルの内容はAI処理のためにのみ使用され、
+      AI側のモデル学習データとして利用されることはありません。
+    </div>
+  </div>
+
+  <div class="legal-section">
+    <h2>04 — 第三者への提供</h2>
+    <p>
+      取得した個人情報は、以下の場合を除き第三者に提供しません。
+    </p>
+    <ul>
+      <li>
+        <strong>Stripe, Inc.</strong>（決済処理）<br>
+        <small>クレジットカード情報は当サービスのサーバーを経由せず、Stripeが直接処理します。Stripeのプライバシーポリシーが適用されます。</small>
+      </li>
+      <li>法令に基づき開示が必要な場合</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>05 — データの保管と削除</h2>
+    <ul>
+      <li>アップロードいただいた原本ファイル: <strong>処理完了後1日以内に自動削除</strong></li>
+      <li>生成されたHTMLポートフォリオ: <strong>生成後7日以内に自動削除</strong></li>
+      <li>IPアドレス（レート制限用）: <strong>2時間後に自動削除</strong></li>
+    </ul>
+    <small style="margin-top:.6rem;">データはAWS（東京リージョン）のサーバーに保管されます。</small>
+  </div>
+
+  <div class="legal-section">
+    <h2>06 — Cookie・アクセス解析</h2>
+    <p>
+      現時点において、当サービスはCookieによるトラッキングやGoogleアナリティクス等のアクセス解析ツールを使用していません。
+    </p>
+  </div>
+
+  <div class="legal-section">
+    <h2>07 — お問い合わせ窓口</h2>
+    <p>
+      個人情報の取り扱いに関するご質問・ご要望は下記までご連絡ください。
+    </p>
+    <ul>
+      <li>メールアドレス: <a href="mailto:hosinozzz@gmail.com" style="color:var(--cyan);">hosinozzz@gmail.com</a></li>
+      <li>対応時間: 平日（営業日3日以内に返信）</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>08 — ポリシーの変更</h2>
+    <p>
+      本ポリシーは予告なく変更される場合があります。
+      変更後のポリシーは本ページに掲載した時点から効力を生じます。
+    </p>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>
+    © 2026 ResumeAI &nbsp;|&nbsp;
+    <a href="tokusho.html">特定商取引法に基づく表記</a> &nbsp;|&nbsp;
+    <a href="privacy.html">プライバシーポリシー</a> &nbsp;|&nbsp;
+    お問い合わせ: <a href="mailto:hosinozzz@gmail.com">hosinozzz@gmail.com</a>
+  </p>
+</footer>
+
+</body>
+</html>
