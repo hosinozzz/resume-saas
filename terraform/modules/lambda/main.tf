@@ -78,6 +78,21 @@ resource "aws_iam_role_policy" "sqs" {
   })
 }
 
+# SES: お問い合わせメール送信
+resource "aws_iam_role_policy" "ses_send" {
+  name = "ses-send-email"
+  role = aws_iam_role.lambda.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect   = "Allow"
+      Action   = ["ses:SendEmail", "ses:SendRawEmail"]
+      Resource = "*"
+    }]
+  })
+}
+
 # Secrets Manager: Claude APIキーとStripeシークレット取得
 resource "aws_iam_role_policy" "secrets_manager" {
   name = "secrets-manager-read"

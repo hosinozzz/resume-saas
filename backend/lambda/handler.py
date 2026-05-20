@@ -1,6 +1,7 @@
 import base64
 import json
 import os
+import re
 import time
 import uuid
 
@@ -9,6 +10,8 @@ import boto3
 from parser import parse_resume
 
 VALID_TEMPLATE_IDS = {"auto", "dark_tech", "business_clean", "minimal_pro", "creative_bold", "medical_care", "academic"}
+CONTACT_EMAIL      = "hosinozzz@gmail.com"
+VALID_CATEGORIES   = {"サービスについて", "技術的な問題", "その他"}
 
 S3 = boto3.client("s3")
 SQS = boto3.client("sqs")
@@ -52,6 +55,8 @@ def lambda_handler(event, context):
         elif path == "/payment/clean-url" and method == "GET":
             from stripe_webhook import get_clean_url
             return get_clean_url(event)
+        elif path == "/contact" and method == "POST":
+            return _handle_contact(event)
         elif path == "/health":
             return _ok({"status": "ok"})
         else:
@@ -59,6 +64,55 @@ def lambda_handler(event, context):
     except Exception as e:
         print(f"[ERROR] unhandled: {e}")
         return _error(500, "サーバーエラーが発生しました。しばらくしてから再度お試しください。")
+
+
+def _handle_contact(event):
+    try:
+        body = json.loads(event.get("body") or "{}")
+    except (json.JSONDecodeError, TypeError):
+        return _error(400, "リクエストの形式が不正です。")
+
+    name     = str(body.get("name",     "")).strip()[:100]
+    email    = str(body.get("email",    "")).strip()[:200]
+    category = str(body.get("category", "")).strip()
+    message  = str(body.get("message",  "")).strip()[:2000]
+
+    if not name:
+        return _error(400, "お名前を入力してください。")
+    if not email or not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email):
+        return _error(400, "正しいメールアドレスを入力してください。")
+    if not message:
+        return _error(400, "お問い合わせ内容を入力してください。")
+    if category not in VALID_CATEGORIES:
+        category = "その他"
+
+    subject = f"【ResumeAI】お問い合わせ: {name}様"
+    body_text = (
+        f"ResumeAI お問い合わせフォームから送信されました。\n\n"
+        f"お名前         : {name}\n"
+        f"メールアドレス : {email}\n"
+        f"お問い合わせ種別: {category}\n\n"
+        f"お問い合わせ内容:\n{message}\n\n"
+        f"---\n"
+        f"返信先（Reply-To）: {email}\n"
+    )
+
+    try:
+        ses = boto3.client("ses", region_name="ap-northeast-1")
+        ses.send_email(
+            Source=CONTACT_EMAIL,
+            Destination={"ToAddresses": [CONTACT_EMAIL]},
+            Message={
+                "Subject": {"Data": subject,   "Charset": "UTF-8"},
+                "Body":    {"Text": {"Data": body_text, "Charset": "UTF-8"}},
+            },
+            ReplyToAddresses=[email],
+        )
+    except Exception as e:
+        print(f"[ERROR] SES send_email failed: {e}")
+        return _error(500, "メールの送信に失敗しました。しばらくしてから再度お試しください。")
+
+    return _ok({"message": "お問い合わせを受け付けました。"})
 
 
 def _handle_upload(event):

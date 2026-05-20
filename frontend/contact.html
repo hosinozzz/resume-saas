@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ — ResumeAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.contact-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 7rem 1.5rem 5rem;
+}
+.contact-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem; letter-spacing: .24em; color: var(--cyan); margin-bottom: .8rem;
+}
+.contact-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  letter-spacing: .08em; margin-bottom: .4rem;
+}
+.contact-subtitle {
+  font-size: .88rem; color: var(--gray);
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border); padding-bottom: 1.5rem;
+}
+.contact-card {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+.form-group { margin-bottom: 1.4rem; }
+.form-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .7rem; letter-spacing: .16em;
+  color: var(--gray); margin-bottom: .55rem;
+}
+.form-label .required {
+  color: var(--cyan); margin-left: .25rem;
+}
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--white);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: .92rem;
+  padding: .72rem 1rem;
+  outline: none;
+  transition: border-color .2s, background .2s;
+  appearance: none;
+}
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--cyan);
+  background: rgba(0,212,255,.04);
+}
+.form-input::placeholder,
+.form-textarea::placeholder { color: var(--gray); }
+.form-select { cursor: pointer; }
+.form-select option { background: #0d1529; color: var(--white); }
+.form-textarea { resize: vertical; min-height: 140px; line-height: 1.75; }
+.form-hint { font-size: .74rem; color: var(--gray); margin-top: .4rem; }
+.form-error {
+  font-size: .78rem; color: #ff8fa3;
+  margin-top: .35rem; display: none;
+}
+.form-error.show { display: block; }
+.submit-wrap { margin-top: 1.8rem; }
+.submit-wrap .btn { width: 100%; justify-content: center; font-size: 1rem; padding: .9rem; }
+
+/* サンキュー画面 */
+.thankyou {
+  display: none;
+  text-align: center;
+  padding: 3rem 1rem;
+}
+.thankyou.show { display: block; }
+.thankyou-icon { font-size: 3rem; margin-bottom: 1rem; }
+.thankyou-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2rem; letter-spacing: .1em; margin-bottom: .6rem;
+}
+.thankyou-msg { font-size: .9rem; color: var(--gray); line-height: 1.8; margin-bottom: 1.8rem; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Resume<span>AI</span></a>
+  <a href="index.html#upload" class="btn btn-outline" style="padding:.4rem 1rem;font-size:.82rem;">今すぐ作る →</a>
+</nav>
+
+<main class="contact-page">
+  <p class="contact-eyebrow">CONTACT</p>
+  <h1 class="contact-title">お問い合わせ</h1>
+  <p class="contact-subtitle">
+    サービスに関するご質問・ご不明点はこちらからお気軽にどうぞ。<br>
+    営業日3日以内にご返信いたします。
+  </p>
+
+  <div class="contact-card">
+
+    <!-- フォーム -->
+    <form id="contactForm" novalidate>
+
+      <div class="form-group">
+        <label class="form-label" for="name">お名前 <span class="required">*</span></label>
+        <input class="form-input" type="text" id="name" name="name"
+               placeholder="山田 太郎" maxlength="100" autocomplete="name">
+        <p class="form-error" id="nameError">お名前を入力してください。</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">メールアドレス（返信先） <span class="required">*</span></label>
+        <input class="form-input" type="email" id="email" name="email"
+               placeholder="your@email.com" maxlength="200" autocomplete="email">
+        <p class="form-error" id="emailError">正しいメールアドレスを入力してください。</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="category">お問い合わせ種別 <span class="required">*</span></label>
+        <select class="form-select" id="category" name="category">
+          <option value="サービスについて">サービスについて</option>
+          <option value="技術的な問題">技術的な問題</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="message">お問い合わせ内容 <span class="required">*</span></label>
+        <textarea class="form-textarea" id="message" name="message"
+                  placeholder="ご質問・ご要望をご記入ください。" maxlength="2000"></textarea>
+        <p class="form-hint">最大2000文字</p>
+        <p class="form-error" id="messageError">お問い合わせ内容を入力してください。</p>
+      </div>
+
+      <p class="form-error" id="submitError" style="text-align:center;margin-bottom:.8rem;"></p>
+
+      <div class="submit-wrap">
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          送信する
+        </button>
+      </div>
+
+    </form>
+
+    <!-- サンキュー -->
+    <div class="thankyou" id="thankyou">
+      <div class="thankyou-icon">✉️</div>
+      <h2 class="thankyou-title">送信完了</h2>
+      <p class="thankyou-msg">
+        お問い合わせありがとうございます。<br>
+        内容を確認の上、営業日3日以内にご返信いたします。
+      </p>
+      <a href="index.html" class="btn btn-outline">トップページへ戻る</a>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  <p>
+    © 2026 ResumeAI &nbsp;|&nbsp;
+    <a href="tokusho.html">特定商取引法に基づく表記</a> &nbsp;|&nbsp;
+    <a href="privacy.html">プライバシーポリシー</a> &nbsp;|&nbsp;
+    <a href="contact.html">お問い合わせ</a>
+  </p>
+</footer>
+
+<script>
+const API_CONTACT = 'https://e3dsi33knk.execute-api.ap-northeast-1.amazonaws.com/contact';
+
+const form       = document.getElementById('contactForm');
+const thankyou   = document.getElementById('thankyou');
+const submitBtn  = document.getElementById('submitBtn');
+const submitError = document.getElementById('submitError');
+
+function showError(id, show) {
+  document.getElementById(id).classList.toggle('show', show);
+}
+
+function validateEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+}
+
+form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const name     = document.getElementById('name').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const category = document.getElementById('category').value;
+  const message  = document.getElementById('message').value.trim();
+
+  let valid = true;
+  showError('nameError',    !name);
+  showError('emailError',   !email || !validateEmail(email));
+  showError('messageError', !message);
+  showError('submitError',  false);
+
+  if (!name || !email || !validateEmail(email) || !message) return;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = '送信中...';
+
+  try {
+    const res  = await fetch(API_CONTACT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, category, message }),
+    });
+    const body = await res.json();
+
+    if (!res.ok) {
+      submitError.textContent = body.error || '送信に失敗しました。しばらくしてから再度お試しください。';
+      showError('submitError', true);
+      submitBtn.disabled = false;
+      submitBtn.textContent = '送信する';
+      return;
+    }
+
+    form.style.display = 'none';
+    thankyou.classList.add('show');
+
+  } catch (err) {
+    submitError.textContent = '通信エラーが発生しました。ネットワーク接続をご確認ください。';
+    showError('submitError', true);
+    submitBtn.disabled = false;
+    submitBtn.textContent = '送信する';
+  }
+});
+</script>
+</body>
+</html>

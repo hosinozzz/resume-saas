@@ -28,6 +28,7 @@ locals {
     "POST /payment/webhook",
     "GET /payment/clean-url",
     "GET /health",
+    "POST /contact",
   ])
 }
 

@@ -131,6 +131,13 @@ module "api_gateway" {
 # CloudWatch Billing Alarm: 月額$50超過でSNS通知
 # （通知受信後、手動でLambda Concurrency=0に設定して停止）
 # ──────────────────────────────────────────
+# ──────────────────────────────────────────
+# SES: お問い合わせメール送信元アドレス検証
+# ──────────────────────────────────────────
+resource "aws_ses_email_identity" "contact" {
+  email = "hosinozzz@gmail.com"
+}
+
 resource "aws_sns_topic" "cost_alert" {
   provider = aws.us_east_1
   name     = "${var.project_name}-cost-alert"
