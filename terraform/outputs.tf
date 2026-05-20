@@ -57,3 +57,8 @@ output "route53_name_servers" {
   description = "resumeai.jp のNSレコード（ドメインレジストラに設定する4つのネームサーバー）"
   value       = aws_route53_zone.main.name_servers
 }
+
+output "acm_certificate_arn" {
+  description = "resumeai.jp ACM証明書ARN（us-east-1）"
+  value       = aws_acm_certificate_validation.resumeai_jp.certificate_arn
+}

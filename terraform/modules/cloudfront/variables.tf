@@ -17,3 +17,14 @@ variable "environment" {
   description = "デプロイ環境"
   type        = string
 }
+
+variable "acm_certificate_arn" {
+  description = "CloudFront用ACM証明書ARN（us-east-1で発行・検証済み）"
+  type        = string
+}
+
+variable "aliases" {
+  description = "カスタムドメイン（CNAME）リスト"
+  type        = list(string)
+  default     = []
+}

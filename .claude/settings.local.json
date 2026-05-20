@@ -39,7 +39,17 @@
       "Bash(python -c ' *)",
       "Bash(python gen_samples.py)",
       "Bash(Get-ChildItem C:\\\\clude-code\\\\resume-saas\\\\frontend\\\\ *)",
-      "PowerShell(aws lambda update-function-code *)"
+      "PowerShell(aws lambda update-function-code *)",
+      "Bash(python)",
+      "Bash(terraform output *)",
+      "Bash(aws cloudfront list-distributions *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(python3 -c \"import json,sys; dists=json.load\\(sys.stdin\\)['DistributionList']['Items']; [print\\(d['Id'], d.get\\('Aliases',{}\\).get\\('Items',[]\\)\\) for d in dists]\")",
+      "Bash(aws cloudfront list-conflicting-aliases *)",
+      "Bash(aws cloudfront *)",
+      "Bash(aws route53 change-resource-record-sets *)",
+      "Bash(aws route53 *)"
     ]
   }
 }

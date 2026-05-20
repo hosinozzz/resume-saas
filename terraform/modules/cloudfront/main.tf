@@ -46,10 +46,13 @@ resource "aws_cloudfront_distribution" "this" {
     }
   }
 
-  # MVP段階はCloudFrontデフォルト証明書（*.cloudfront.net）を使用
-  # カスタムドメイン追加時はACM証明書に差し替える
+  # aliasesはassociate-alias CLIで手動追加後に有効化する
+  # aliases = length(var.aliases) > 0 ? var.aliases : null
+
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn      = var.acm_certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
   }
 }
 

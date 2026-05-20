@@ -63,7 +63,11 @@ module "s3_generated" {
   purpose                = "generated"
   expiration_days        = 7  # 生成HTML（{job_id}/preview.html, clean.html）は7日後に削除
   upload_expiration_days = 1  # アップロード原本（uploaded/{job_id}/resume.txt）は1日後に削除
-  cors_allowed_origins   = ["https://d20pg6j10067w4.cloudfront.net"]
+  cors_allowed_origins   = [
+    "https://d20pg6j10067w4.cloudfront.net",
+    "https://resumeai.jp",
+    "https://www.resumeai.jp",
+  ]
 }
 
 # ──────────────────────────────────────────
@@ -72,10 +76,12 @@ module "s3_generated" {
 module "cloudfront" {
   source = "./modules/cloudfront"
 
-  frontend_bucket_id                  = module.s3_frontend.bucket_id
+  frontend_bucket_id                   = module.s3_frontend.bucket_id
   frontend_bucket_regional_domain_name = module.s3_frontend.bucket_regional_domain_name
-  project_name                        = var.project_name
-  environment                         = var.environment
+  project_name                         = var.project_name
+  environment                          = var.environment
+  acm_certificate_arn                  = aws_acm_certificate_validation.resumeai_jp.certificate_arn
+  aliases                              = ["resumeai.jp", "www.resumeai.jp"]
 }
 
 # ──────────────────────────────────────────
@@ -140,6 +146,97 @@ module "api_gateway" {
 resource "aws_route53_zone" "main" {
   name    = "resumeai.jp"
   comment = "resumeai.jp public hosted zone"
+}
+
+# ──────────────────────────────────────────
+# ACM: resumeai.jp TLS証明書（us-east-1で発行 → CloudFront用）
+# ──────────────────────────────────────────
+resource "aws_acm_certificate" "resumeai_jp" {
+  provider = aws.us_east_1
+
+  domain_name               = "resumeai.jp"
+  subject_alternative_names = ["www.resumeai.jp"]
+  validation_method         = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# ACM DNS検証用CNAMEレコード（Route53に自動追加）
+resource "aws_route53_record" "acm_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.resumeai_jp.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      type   = dvo.resource_record_type
+      record = dvo.resource_record_value
+    }
+  }
+
+  zone_id = aws_route53_zone.main.zone_id
+  name    = each.value.name
+  type    = each.value.type
+  ttl     = 300
+  records = [each.value.record]
+}
+
+# 証明書検証完了待ち
+resource "aws_acm_certificate_validation" "resumeai_jp" {
+  provider = aws.us_east_1
+
+  certificate_arn         = aws_acm_certificate.resumeai_jp.arn
+  validation_record_fqdns = [for r in aws_route53_record.acm_validation : r.fqdn]
+}
+
+# ──────────────────────────────────────────
+# Route53: resumeai.jp → CloudFrontエイリアスレコード
+# ──────────────────────────────────────────
+resource "aws_route53_record" "apex" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "resumeai.jp"
+  type    = "A"
+
+  alias {
+    name                   = module.cloudfront.domain_name
+    zone_id                = "Z2FDTNDATAQYW2"
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "apex_aaaa" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "resumeai.jp"
+  type    = "AAAA"
+
+  alias {
+    name                   = module.cloudfront.domain_name
+    zone_id                = "Z2FDTNDATAQYW2"
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "www" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "www.resumeai.jp"
+  type    = "A"
+
+  alias {
+    name                   = module.cloudfront.domain_name
+    zone_id                = "Z2FDTNDATAQYW2"
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "www_aaaa" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "www.resumeai.jp"
+  type    = "AAAA"
+
+  alias {
+    name                   = module.cloudfront.domain_name
+    zone_id                = "Z2FDTNDATAQYW2"
+    evaluate_target_health = false
+  }
 }
 
 resource "aws_ses_email_identity" "contact" {
