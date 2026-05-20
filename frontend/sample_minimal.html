@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>伊藤 さくら — ポートフォリオ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f9f9f7;--bg2:#f0f0ed;--ink:#111111;--mid:#555555;
+  --light:#999999;--border:#d8d8d5;--radius:4px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink);line-height:1.85}
+.hero{padding:6rem 2rem 5rem;text-align:center;border-bottom:1px solid var(--border)}
+.hero-kana{font-size:.75rem;letter-spacing:.38em;color:var(--light);margin-bottom:1.2rem}
+.hero-name{font-size:clamp(3rem,8vw,5.5rem);font-weight:300;color:var(--ink);line-height:1;
+  letter-spacing:-.02em;margin-bottom:1rem}
+.hero-divider{width:36px;height:1px;background:var(--ink);margin:.8rem auto 1rem}
+.hero-badge{display:inline-block;font-size:.76rem;letter-spacing:.2em;color:var(--mid);margin-bottom:1.6rem}
+.hero-summary{max-width:560px;margin:0 auto 1.5rem;font-size:.95rem;color:var(--mid);line-height:1.95;font-weight:300}
+.hero-meta{display:flex;gap:2rem;justify-content:center;font-size:.8rem;color:var(--light)}
+.section{padding:5rem 2rem}
+.section-alt{background:var(--bg2)}
+.container{max-width:840px;margin:0 auto}
+.section-title{font-size:.7rem;letter-spacing:.32em;color:var(--light);margin-bottom:2.5rem;
+  display:flex;align-items:center;gap:1rem}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.section-title span{display:none}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem}
+.skill-card{padding:1.4rem 0;border-bottom:1px solid var(--border);background:transparent}
+.skill-header{display:flex;justify-content:space-between;margin-bottom:.5rem}
+.skill-category{font-size:.88rem;font-weight:700;color:var(--ink)}
+.skill-pct{font-size:.76rem;color:var(--light)}
+.skill-bar{height:1px;background:var(--border);margin-bottom:.85rem;overflow:visible}
+.skill-fill{height:1px;width:0;background:var(--ink);transition:width 1.2s ease}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.tag{padding:.14rem .48rem;border:1px solid var(--border);border-radius:2px;font-size:.7rem;color:var(--mid)}
+.certs-list{display:flex;flex-direction:column}
+.cert-item{display:flex;align-items:baseline;gap:1.5rem;padding:.75rem 0;border-bottom:1px solid var(--border)}
+.cert-item.top .cert-name{font-weight:700}
+.cert-date{font-size:.76rem;color:var(--light);min-width:65px;flex-shrink:0}
+.cert-name{font-size:.9rem;color:var(--ink);flex:1}
+.top-badge{font-size:.64rem;color:var(--mid);border:1px solid var(--border);padding:.1rem .4rem;border-radius:2px}
+.timeline{display:flex;flex-direction:column}
+.timeline-item{display:grid;grid-template-columns:110px 1fr;gap:1.5rem;padding:2.5rem 0;border-bottom:1px solid var(--border)}
+.tl-dot{display:none}
+.tl-content{}
+.tl-period{font-size:.74rem;color:var(--light);line-height:1.5;padding-top:.2rem}
+.tl-company{font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:.15rem}
+.tl-role{font-size:.85rem;color:var(--mid);margin-bottom:.7rem}
+.tl-bullets{list-style:none;display:flex;flex-direction:column;gap:.35rem;margin-bottom:.8rem}
+.tl-bullets li{font-size:.88rem;color:var(--mid);padding-left:.9rem;position:relative}
+.tl-bullets li::before{content:'—';position:absolute;left:0;color:var(--light)}
+.tl-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.tag-sm{font-size:.7rem;padding:.12rem .45rem}
+.profile-card{padding:0}
+.profile-table{width:100%;border-collapse:collapse}
+.profile-table th,.profile-table td{padding:.7rem 0;border-bottom:1px solid var(--border)}
+.profile-table th{font-size:.78rem;color:var(--light);width:110px;font-weight:400;letter-spacing:.05em}
+.profile-table td{font-size:.9rem;color:var(--ink)}
+.pr-box{margin-top:2.5rem;padding-top:2.5rem;border-top:1px solid var(--border)}
+.pr-box h3{font-size:.7rem;letter-spacing:.22em;color:var(--light);margin-bottom:.8rem}
+.pr-box p{font-size:.92rem;color:var(--mid);line-height:1.95}
+.footer{text-align:center;padding:3rem 2rem;color:var(--light);font-size:.75rem;border-top:1px solid var(--border)}
+.accent{color:var(--ink)}
+.fade-in{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.fade-in.visible{opacity:1;transform:none}
+.empty{color:var(--light);font-size:.88rem}
+@media print{body{background:#fff}.section-alt{background:#fff}.fade-in{opacity:1!important;transform:none!important}}
+@media(max-width:600px){.timeline-item{grid-template-columns:1fr}.tl-period{padding:0}.skills-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="container">
+    <div class="fade-in">
+      <p class="hero-kana">ITO SAKURA</p>
+      <h1 class="hero-name">伊藤 さくら</h1>
+      <div class="hero-divider"></div>
+      <p class="hero-badge">公認会計士・経理財務マネージャー&nbsp;&nbsp;/&nbsp;&nbsp;経験 12年</p>
+      <p class="hero-summary">公認会計士として製造業・IT企業の経理・財務を12年間担当。月次決算を5営業日→2営業日に短縮。ERP導入PMとして50億規模の財務基盤を刷新。税務申告から連結決算まで幅広く対応。</p>
+      <div class="hero-meta">
+        <span>東京都新宿区</span>
+        <span>080-XXXX-XXXX</span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section" id="skills"><div class="container">
+  <h2 class="section-title fade-in">SKILLS <span></span></h2>
+  <div class="skills-grid fade-in"><div class="skill-card"><div class="skill-header"><span class="skill-category">会計・財務</span><span class="skill-pct">95%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div><div class="skill-tags"><span class="tag">月次/年次決算</span> <span class="tag">連結決算</span> <span class="tag">管理会計</span> <span class="tag">予実管理</span> <span class="tag">財務分析</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">税務・法務</span><span class="skill-pct">88%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="88"></div></div><div class="skill-tags"><span class="tag">法人税申告</span> <span class="tag">消費税</span> <span class="tag">税務調査対応</span> <span class="tag">契約書レビュー</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">ERP / ツール</span><span class="skill-pct">80%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div><div class="skill-tags"><span class="tag">SAP（FI/CO）</span> <span class="tag">Oracle EBS</span> <span class="tag">freee</span> <span class="tag">Tableau</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">データ分析</span><span class="skill-pct">72%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="72"></div></div><div class="skill-tags"><span class="tag">Excel（ピボット・VBA）</span> <span class="tag">Power BI</span> <span class="tag">SQL基礎</span> <span class="tag">Python基礎</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">マネジメント</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div><div class="skill-tags"><span class="tag">経理部門リード（8名）</span> <span class="tag">業務標準化</span> <span class="tag">内部統制</span> <span class="tag">J-SOX</span></div></div></div>
+</div></section>
+<section class="section section-alt" id="certs"><div class="container">
+  <h2 class="section-title fade-in">CERTIFICATIONS <span></span></h2>
+  <div class="certs-list fade-in"><div class="cert-item top"><span class="cert-date">2013-11</span><span class="cert-name">公認会計士（CPA）</span><span class="top-badge">★ 主要</span></div>
+<div class="cert-item top"><span class="cert-date">2020-06</span><span class="cert-name">USCPA（米国公認会計士）合格</span><span class="top-badge">★ 主要</span></div>
+<div class="cert-item"><span class="cert-date">2023-03</span><span class="cert-name">SAP認定コンサルタント（FI/CO）</span></div>
+<div class="cert-item"><span class="cert-date">2011-06</span><span class="cert-name">日商簿記検定1級</span></div>
+<div class="cert-item"><span class="cert-date">2022-09</span><span class="cert-name">TOEIC 810点</span></div></div>
+</div></section>
+<section class="section" id="career"><div class="container">
+  <h2 class="section-title fade-in">CAREER <span></span></h2>
+  <div class="timeline fade-in"><div class="timeline-item"><div class="tl-dot"></div><div class="tl-content"><p class="tl-period">2018.07 – 現在</p><h3 class="tl-company">株式会社テクノフューチャー</h3><p class="tl-role">経理部 マネージャー</p><ul class="tl-bullets"><li>経理部門8名をマネジメント。月次決算を5営業日→2営業日に短縮</li>
+<li>SAP S/4HANA導入PMとして約50億規模の財務基盤刷新を主導（18ヵ月プロジェクト）</li>
+<li>連結決算・税務申告（日本・海外子会社5社）を一元管理</li>
+<li>Power BIダッシュボード整備により経営会議向け財務レポートを自動化</li></ul><div class="tl-tags"><span class="tag tag-sm">SAP</span> <span class="tag tag-sm">連結決算</span> <span class="tag tag-sm">Power BI</span> <span class="tag tag-sm">経理マネジメント</span></div></div></div>
+<div class="timeline-item"><div class="tl-dot"></div><div class="tl-content"><p class="tl-period">2013.04 – 2018.06</p><h3 class="tl-company">有限責任監査法人トーマツ</h3><p class="tl-role">公認会計士（監査担当）</p><ul class="tl-bullets"><li>製造業・商社・IT企業の法定監査を担当（年間8〜12社）</li>
+<li>IPO支援業務（内部統制整備、J-SOX対応）を3社担当</li>
+<li>チームリーダーとして後輩4名の指導・品質レビューを担当</li></ul><div class="tl-tags"><span class="tag tag-sm">監査</span> <span class="tag tag-sm">J-SOX</span> <span class="tag tag-sm">IPO支援</span> <span class="tag tag-sm">財務諸表分析</span></div></div></div></div>
+</div></section>
+<section class="section section-alt" id="profile"><div class="container">
+  <h2 class="section-title fade-in">PROFILE <span></span></h2>
+  <div class="profile-card fade-in"><table class="profile-table"><tr><th>氏名</th><td>伊藤 さくら&emsp;<small>ITO SAKURA</small></td></tr><tr><th>生年月日</th><td>1988年3月5日</td></tr><tr><th>所在地</th><td>東京都新宿区</td></tr><tr><th>電話番号</th><td>080-XXXX-XXXX</td></tr></table><div class="pr-box"><h3>自己PR</h3><p>公認会計士資格を活かし、製造業・IT企業での経理・財務管理を12年間担当。月次決算の自動化推進やERP導入プロジェクトのPMも経験。数字の分析力と、経営陣への分かりやすい報告スキルが強みです。</p></div></div>
+</div></section>
+<footer class="footer"><p>Generated by <span class="accent">Resume AI</span></p></footer>
+<script>
+(function(){
+  var io=new IntersectionObserver(function(e){
+    e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll('.fade-in').forEach(function(el){io.observe(el);});
+})();
+(function(){
+  var bio=new IntersectionObserver(function(e){
+    e.forEach(function(x){
+      if(x.isIntersecting){
+        var f=x.target.querySelector('.skill-fill');
+        if(f)f.style.width=f.dataset.pct+'%';
+        bio.unobserve(x.target);
+      }
+    });
+  },{threshold:0.3});
+  document.querySelectorAll('.skill-card').forEach(function(el){bio.observe(el);});
+})();
+</script>
+</body></html>

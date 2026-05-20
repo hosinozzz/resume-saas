@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ダウンロード — ResumeAI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  align-items: center;
+  padding: 5rem 1.5rem 3rem;
+}
+
+.page-wrap {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.result-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.result-icon { font-size: 3rem; line-height: 1; }
+
+.result-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2rem;
+  letter-spacing: .06em;
+  color: var(--white);
+}
+
+.result-sub { font-size: .9rem; color: var(--gray); line-height: 1.6; }
+
+.price-display {
+  display: flex;
+  align-items: baseline;
+  gap: .6rem;
+  padding: 1rem 1.5rem;
+  background: var(--navy2);
+  border: 1px solid rgba(245,166,35,.3);
+  border-radius: var(--radius);
+}
+.price-display del { font-size: 1.1rem; color: var(--gray); }
+.price-display .amount {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2.6rem;
+  color: #f5a623;
+  line-height: 1;
+}
+.price-display .sale-badge {
+  font-size: .72rem;
+  color: var(--cyan);
+  background: rgba(0,212,255,.08);
+  border: 1px solid rgba(0,212,255,.2);
+  border-radius: 4px;
+  padding: .2rem .5rem;
+}
+
+.btn-full { width: 100%; justify-content: center; font-size: 1rem; }
+
+.spinner-sm {
+  width: 22px; height: 22px;
+  border: 3px solid rgba(0,229,160,.2);
+  border-top-color: var(--success);
+  border-radius: 50%;
+  animation: spin .6s linear infinite;
+  flex-shrink: 0;
+}
+.polling-row {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  font-size: .85rem;
+  color: var(--gray);
+}
+
+.success-badge {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .6rem 1rem;
+  background: rgba(0,229,160,.08);
+  border: 1px solid rgba(0,229,160,.25);
+  border-radius: 8px;
+  font-size: .82rem;
+  color: var(--success);
+  width: 100%;
+  justify-content: center;
+}
+
+.preview-section {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.preview-section-header {
+  padding: .7rem 1.2rem;
+  background: var(--navy2);
+  border-bottom: 1px solid var(--border);
+  font-size: .78rem;
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.preview-iframe {
+  width: 100%;
+  height: 80vh;
+  border: none;
+  display: block;
+  background: #fff;
+}
+.preview-loading-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--blue));
+  animation: loadbar 1.2s ease-in-out infinite;
+  transform-origin: left;
+}
+@keyframes loadbar {
+  0%   { transform: scaleX(0); }
+  50%  { transform: scaleX(.7); }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Resume<span>AI</span></a>
+  <a href="index.html" class="btn btn-outline" style="padding:.4rem 1rem;font-size:.82rem;">← 最初からやり直す</a>
+</nav>
+
+<div class="page-wrap">
+<div class="result-card" id="resultCard">
+
+  <!-- ── 決済確認中（ポーリング）── -->
+  <div id="statePolling">
+    <div class="result-icon">⏳</div>
+    <p class="result-title">確認中</p>
+    <div class="polling-row">
+      <div class="spinner-sm"></div>
+      <span id="pollingMsg">決済を確認中...</span>
+    </div>
+  </div>
+
+  <!-- ── 決済完了 → ダウンロード ── -->
+  <div id="stateSuccess" style="display:none;">
+    <div class="result-icon">🎉</div>
+    <p class="result-title">完了しました！</p>
+    <p class="result-sub">ポートフォリオが完成しました。<br>下のボタンからダウンロードしてください。</p>
+    <div class="success-badge">✓ 決済完了 — クリーン版（ウォーターマークなし）</div>
+    <button class="btn btn-download btn-full" id="downloadBtn">
+      ⬇ portfolio_resume.html をダウンロード
+    </button>
+    <p style="font-size:.75rem;color:var(--gray);">※ダウンロードリンクは1時間有効です</p>
+  </div>
+
+  <!-- ── 決済キャンセル → 再購入 ── -->
+  <div id="stateCancel" style="display:none;">
+    <div class="result-icon">💳</div>
+    <p class="result-title">ポートフォリオ完成</p>
+    <p class="result-sub">AIによる改善が完了しました。<br>¥250でウォーターマークなし完全版をダウンロードできます。</p>
+    <div class="price-display">
+      <del>¥500</del>
+      <span class="amount">¥250</span>
+      <span class="sale-badge">50% OFF</span>
+    </div>
+    <button class="btn btn-pay btn-full" id="payBtn">
+      💳 ¥250でダウンロード（オープニングセール）
+    </button>
+  </div>
+
+  <!-- ── エラー ── -->
+  <div id="stateError" style="display:none;">
+    <div class="result-icon">😞</div>
+    <p class="result-title">エラー</p>
+    <p class="result-sub">セッションが見つかりません。<br>もう一度アップロードしてください。</p>
+    <a href="index.html" class="btn btn-primary btn-full">アップロードに戻る</a>
+  </div>
+
+</div><!-- /result-card -->
+
+  <!-- ── 決済完了後のiframeプレビュー ── -->
+  <div class="preview-section" id="previewSection" style="display:none;">
+    <div class="preview-section-header">
+      <span>👁</span> ポートフォリオプレビュー（クリーン版）
+      <div class="preview-loading-bar" id="previewLoadingBar"></div>
+    </div>
+    <iframe class="preview-iframe" id="previewFrame" title="ポートフォリオプレビュー"></iframe>
+  </div>
+
+</div><!-- /page-wrap -->
+
+<footer class="footer">
+  <p>© 2026 ResumeAI &nbsp;|&nbsp; Powered by Claude AI</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API_BASE = 'https://e3dsi33knk.execute-api.ap-northeast-1.amazonaws.com';
+
+const params    = new URLSearchParams(location.search);
+const sessionId = params.get('sessionId') || params.get('session');
+const isPaid    = params.get('paid') === 'true';
+
+const statePolling      = document.getElementById('statePolling');
+const stateSuccess      = document.getElementById('stateSuccess');
+const stateCancel       = document.getElementById('stateCancel');
+const stateError        = document.getElementById('stateError');
+const downloadBtn       = document.getElementById('downloadBtn');
+const payBtn            = document.getElementById('payBtn');
+const pollingMsg        = document.getElementById('pollingMsg');
+const previewSection    = document.getElementById('previewSection');
+const previewFrame      = document.getElementById('previewFrame');
+const previewLoadingBar = document.getElementById('previewLoadingBar');
+const toast             = document.getElementById('toast');
+
+function showState(name) {
+  [statePolling, stateSuccess, stateCancel, stateError].forEach(el => {
+    el.style.display = el.id === name ? '' : 'none';
+  });
+}
+
+// ── 初期化 ──
+(async function init() {
+  if (!sessionId) { showState('stateError'); return; }
+
+  if (isPaid) {
+    showState('statePolling');
+    await pollCleanUrl();
+  } else {
+    // Stripeキャンセル or 直接アクセス → 購入画面を表示
+    showState('stateCancel');
+  }
+})();
+
+// ── 決済完了後: clean URL をポーリング ──
+async function pollCleanUrl() {
+  const MAX_ATTEMPTS = 45; // 90秒
+  const INTERVAL     = 2000;
+  let attempts       = 0;
+
+  const timer = setInterval(async () => {
+    attempts++;
+    pollingMsg.textContent = `決済を確認中... (${attempts * INTERVAL / 1000}秒)`;
+
+    try {
+      const res  = await fetch(`${API_BASE}/payment/clean-url?sessionId=${sessionId}`);
+      const body = await res.json();
+
+      if (res.ok && body.cleanUrl) {
+        clearInterval(timer);
+        downloadBtn.addEventListener('click', () => _downloadAsBlob(body.cleanUrl));
+        showState('stateSuccess');
+        _showIframePreview(body.cleanUrl);
+        return;
+      }
+    } catch (_) {}
+
+    if (attempts >= MAX_ATTEMPTS) {
+      clearInterval(timer);
+      showState('stateCancel');
+      showToast('URLの取得に時間がかかっています（90秒経過）。しばらく後に再読み込みしてください。', 'error');
+    }
+  }, INTERVAL);
+}
+
+// ── Blob ダウンロード ──
+async function _downloadAsBlob(cleanUrl) {
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = '取得中...';
+  try {
+    const res  = await fetch(cleanUrl);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'portfolio_resume.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    showToast('ダウンロードに失敗しました。再度お試しください。', 'error');
+    console.error(err);
+  } finally {
+    downloadBtn.disabled = false;
+    downloadBtn.textContent = '⬇ portfolio_resume.html をダウンロード';
+  }
+}
+
+// ── iframeプレビュー表示 ──
+function _showIframePreview(cleanUrl) {
+  previewSection.style.display = '';
+  previewFrame.onload = () => {
+    previewLoadingBar.style.display = 'none';
+  };
+  previewFrame.src = cleanUrl;
+}
+
+// ── 再購入ボタン ──
+payBtn.addEventListener('click', async () => {
+  payBtn.disabled = true;
+  payBtn.textContent = '決済ページを準備中...';
+  try {
+    const res  = await fetch(`${API_BASE}/payment/checkout`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ sessionId }),
+    });
+    const body = await res.json();
+    if (!res.ok || !body.checkoutUrl) {
+      showToast(body.error || '決済の準備中にエラーが発生しました', 'error');
+      payBtn.disabled = false;
+      payBtn.textContent = '💳 ¥250でダウンロード（オープニングセール）';
+      return;
+    }
+    window.location.href = body.checkoutUrl;
+  } catch (err) {
+    showToast('通信エラーが発生しました', 'error');
+    payBtn.disabled = false;
+    payBtn.textContent = '💳 ¥250でダウンロード（オープニングセール）';
+  }
+});
+
+// ── トースト ──
+let toastTimer;
+function showToast(msg, type = 'error') {
+  toast.textContent = msg;
+  toast.className   = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 5000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>佐藤 美咲 — ポートフォリオ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:    #0a0f1e;
+  --navy2:   #0d1529;
+  --navy3:   #111d3a;
+  --cyan:    #00d4ff;
+  --cyan2:   #00a8cc;
+  --cyan3:   #006f88;
+  --white:   #e8f0ff;
+  --gray:    #8899bb;
+  --card:    rgba(255,255,255,.04);
+  --border:  rgba(0,212,255,.15);
+  --radius:  12px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 4rem 2rem;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,212,255,.12) 0%, transparent 70%),
+    linear-gradient(180deg, #050a18 0%, var(--navy) 100%);
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 700px; }
+
+.hero-kana {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .85rem;
+  letter-spacing: .3em;
+  color: var(--cyan);
+  margin-bottom: .5rem;
+}
+
+.hero-name {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(3.5rem, 10vw, 6rem);
+  letter-spacing: .08em;
+  background: linear-gradient(135deg, var(--white) 40%, var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.hero-badge {
+  display: inline-block;
+  margin: 1rem 0;
+  padding: .3rem 1.2rem;
+  border: 1px solid var(--cyan3);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--cyan);
+  letter-spacing: .1em;
+}
+
+.hero-summary {
+  font-size: 1rem;
+  color: var(--gray);
+  max-width: 540px;
+  margin: 0 auto 1.5rem;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: .85rem;
+  color: var(--gray);
+}
+
+/* ── SECTIONS ── */
+.section { padding: 5rem 2rem; }
+.section-alt { background: var(--navy2); }
+.container { max-width: 900px; margin: 0 auto; }
+
+.section-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2.8rem;
+  letter-spacing: .12em;
+  color: var(--white);
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: .7rem;
+}
+.section-title span {
+  font-size: 1rem;
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── SKILLS ── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.skill-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.4rem;
+  transition: border-color .3s, transform .3s;
+}
+.skill-card:hover { border-color: var(--cyan2); transform: translateY(-3px); }
+
+.skill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .6rem; }
+
+.skill-category {
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--white);
+}
+.skill-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--cyan);
+}
+
+.skill-bar {
+  height: 4px;
+  background: rgba(255,255,255,.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: .8rem;
+}
+.skill-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--cyan3), var(--cyan));
+  border-radius: 2px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+.skill-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+.tag {
+  padding: .2rem .6rem;
+  background: rgba(0,212,255,.1);
+  border: 1px solid rgba(0,212,255,.2);
+  border-radius: 4px;
+  font-size: .75rem;
+  color: var(--cyan);
+  white-space: nowrap;
+}
+
+/* ── CERTS ── */
+.certs-list { display: flex; flex-direction: column; gap: .7rem; }
+
+.cert-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .8rem 1.2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  flex-wrap: wrap;
+}
+.cert-item.top { border-color: rgba(255,215,0,.3); }
+
+.cert-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--gray);
+  min-width: 70px;
+}
+.cert-name { flex: 1; font-size: .95rem; }
+
+.top-badge {
+  font-size: .7rem;
+  padding: .15rem .5rem;
+  background: rgba(255,215,0,.12);
+  border: 1px solid rgba(255,215,0,.3);
+  color: gold;
+  border-radius: 4px;
+}
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--cyan) 0%, transparent 100%);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding-left: 1.5rem;
+}
+
+.tl-dot {
+  position: absolute;
+  left: -2.35rem;
+  top: .35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.tl-period {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--cyan);
+  margin-bottom: .2rem;
+}
+.tl-company {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: .15rem;
+}
+.tl-role {
+  font-size: .9rem;
+  color: var(--gray);
+  margin-bottom: .7rem;
+}
+
+.tl-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  margin-bottom: .8rem;
+}
+.tl-bullets li::before {
+  content: '▸ ';
+  color: var(--cyan);
+  font-size: .8em;
+}
+.tl-bullets li { font-size: .9rem; color: var(--gray); }
+
+.tl-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+.tag-sm { font-size: .7rem; padding: .15rem .5rem; }
+
+/* ── PROFILE ── */
+.profile-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+.profile-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.profile-table th, .profile-table td { padding: .6rem .8rem; }
+.profile-table th {
+  text-align: left;
+  color: var(--cyan);
+  font-size: .85rem;
+  width: 120px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.profile-table td { font-size: .95rem; }
+.profile-table tr:not(:last-child) td,
+.profile-table tr:not(:last-child) th {
+  border-bottom: 1px solid var(--border);
+}
+
+.pr-box h3 {
+  font-size: .85rem;
+  color: var(--cyan);
+  margin-bottom: .5rem;
+  font-weight: 400;
+}
+.pr-box p { font-size: .95rem; color: var(--gray); }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  background: #050a18;
+  color: var(--gray);
+  font-size: .8rem;
+}
+.accent { color: var(--cyan); }
+
+/* ── ANIMATIONS ── */
+.fade-in { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.fade-in.visible { opacity: 1; transform: none; }
+
+.empty { color: var(--gray); font-size: .9rem; }
+
+/* ── PRINT ── */
+@media print {
+  body { background: #fff; color: #111; }
+  .hero { min-height: auto; page-break-after: always; }
+  .hero-bg, .hero-bg::after { display: none; }
+  .hero-name { -webkit-text-fill-color: #111; }
+  .section, .section-alt { background: #fff; padding: 1.5rem 0; }
+  .skill-fill { background: #333 !important; }
+  .fade-in { opacity: 1 !important; transform: none !important; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .skills-grid { grid-template-columns: 1fr; }
+  .section-title { font-size: 2rem; }
+  .hero-name { font-size: 3rem; }
+  .timeline { padding-left: 1.2rem; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content fade-in">
+    <p class="hero-kana">SATO MISAKI</p>
+    <h1 class="hero-name">佐藤 美咲</h1>
+    <p class="hero-badge">Webエンジニア（営業→IT転職） / 経験 2年</p>
+    <p class="hero-summary">営業職から独学でエンジニアに転身。Python/Flask + React でフルスタック開発を実践。Salesforce管理者資格を活かしたCRM連携開発も担当。顧客目線のUX設計と素早いプロトタイピングでチームに貢献。</p>
+    <div class="hero-meta">
+      <span>📍 神奈川県横浜市</span>
+      <span>📞 080-XXXX-XXXX</span>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <div class="container">
+    <h2 class="section-title fade-in"><span>01</span>SKILLS</h2>
+    <div class="skills-grid fade-in">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Frontend</span>
+          <span class="skill-pct">70%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div>
+        <div class="skill-tags"><span class="tag">React</span> <span class="tag">TypeScript</span> <span class="tag">HTML/CSS</span> <span class="tag">Tailwind CSS</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Backend</span>
+          <span class="skill-pct">75%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="75"></div></div>
+        <div class="skill-tags"><span class="tag">Python</span> <span class="tag">Flask</span> <span class="tag">FastAPI</span> <span class="tag">REST API</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Database</span>
+          <span class="skill-pct">65%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="65"></div></div>
+        <div class="skill-tags"><span class="tag">MySQL</span> <span class="tag">PostgreSQL</span> <span class="tag">SQLite</span> <span class="tag">Redis</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">CRM / SaaS</span>
+          <span class="skill-pct">80%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div>
+        <div class="skill-tags"><span class="tag">Salesforce</span> <span class="tag">HubSpot</span> <span class="tag">Notion API</span> <span class="tag">Slack API</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">DevOps</span>
+          <span class="skill-pct">60%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="60"></div></div>
+        <div class="skill-tags"><span class="tag">Docker</span> <span class="tag">GitHub</span> <span class="tag">Heroku</span> <span class="tag">AWS (EC2/S3)</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Data Analysis</span>
+          <span class="skill-pct">70%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div>
+        <div class="skill-tags"><span class="tag">pandas</span> <span class="tag">matplotlib</span> <span class="tag">Jupyter</span> <span class="tag">Google Analytics</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="section section-alt" id="certs">
+  <div class="container">
+    <h2 class="section-title fade-in"><span>02</span>CERTIFICATIONS</h2>
+    <div class="certs-list fade-in">
+      <div class="cert-item top"><span class="cert-date">2024-03</span><span class="cert-name">Salesforce認定 Platformデベロッパー</span><span class="top-badge">★ 主要資格</span></div>
+      <div class="cert-item top"><span class="cert-date">2023-11</span><span class="cert-name">基本情報技術者試験</span><span class="top-badge">★ 主要資格</span></div>
+      <div class="cert-item"><span class="cert-date">2023-07</span><span class="cert-name">Python 3 エンジニア認定基礎試験</span></div>
+      <div class="cert-item"><span class="cert-date">2022-09</span><span class="cert-name">Salesforce認定 アドミニストレーター</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section class="section" id="career">
+  <div class="container">
+    <h2 class="section-title fade-in"><span>03</span>CAREER</h2>
+    <div class="timeline fade-in">
+      <div class="timeline-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <p class="tl-period">2023.10 – 現在</p>
+          <h3 class="tl-company">株式会社フューチャーリンク</h3>
+          <p class="tl-role">Webエンジニア（正社員）</p>
+          <ul class='tl-bullets'>            <li>Python/Flask + React による社内業務自動化ツールを開発・リリース</li>
+            <li>Salesforce と社内DBのデータ連携バッチを構築（処理時間90%短縮）</li>
+            <li>ユーザーインタビューを元にしたUX改善で月間アクティブ率が1.8倍に向上</li>
+            <li>独学で開発した営業支援Webアプリが社内表彰を受賞</li></ul>
+          <div class='tl-tags'><span class="tag tag-sm">Python</span> <span class="tag tag-sm">React</span> <span class="tag tag-sm">Salesforce</span> <span class="tag tag-sm">MySQL</span> <span class="tag tag-sm">Docker</span></div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <p class="tl-period">2020.04 – 2023.09</p>
+          <h3 class="tl-company">株式会社フューチャーリンク</h3>
+          <p class="tl-role">法人営業（IT・SaaS提案）</p>
+          <ul class='tl-bullets'>            <li>担当顧客120社のSalesforce導入・運用支援</li>
+            <li>年間新規獲得目標120%達成（2期連続）</li>
+            <li>営業DX推進チームでSalesforce管理者を兼務</li></ul>
+          <div class='tl-tags'><span class="tag tag-sm">Salesforce</span> <span class="tag tag-sm">法人営業</span> <span class="tag tag-sm">SaaS提案</span> <span class="tag tag-sm">Excel/VBA</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section class="section section-alt" id="profile">
+  <div class="container">
+    <h2 class="section-title fade-in"><span>04</span>PROFILE</h2>
+    <div class="profile-card fade-in">
+      <table class="profile-table">
+        <tr><th>氏名</th><td>佐藤 美咲&emsp;<small>SATO MISAKI</small></td></tr>
+        <tr><th>生年月日</th><td>1997年9月20日</td></tr>
+        <tr><th>所在地</th><td>神奈川県横浜市</td></tr>
+        <tr><th>電話番号</th><td>080-XXXX-XXXX</td></tr>
+      </table>
+      <div class='pr-box'><h3>自己PR</h3><p>営業職で培ったコミュニケーション力と課題解決思考を武器に、未経験からWebエンジニアへのキャリアチェンジを実現しました。独学とスクールでPython・React・SQLを習得し、現在は自社サービスの開発を担当。顧客視点のプロダクト開発が強みです。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Generated by <span class="accent">Resume AI</span></p>
+</footer>
+
+<script>
+
+// スクロール連動フェードイン
+(function () {
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(function (el) { io.observe(el); });
+})();
+
+// スキルバーアニメーション（可視化後に幅をセット）
+(function () {
+  var barIo = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var fill = e.target.querySelector('.skill-fill');
+        if (fill) fill.style.width = fill.dataset.pct + '%';
+        barIo.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.skill-card').forEach(function (el) { barIo.observe(el); });
+})();
+
+</script>
+</body>
+</html>

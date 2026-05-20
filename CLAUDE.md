@@ -49,7 +49,7 @@ HTMLポートフォリオ形式でダウンロード提供するミニマムSaaS
     ▼
 [Lambda: Python 3.12]
     ├─ ファイルパース (python-docx / pdfplumber)
-    ├─ Claude API呼び出し (claude-sonnet-4-20250514)
+    ├─ Claude API呼び出し (claude-sonnet-4-6)
     ├─ HTMLポートフォリオ生成
     ├─ ウォーターマーク付与
     ├─ S3一時保存（TTL: 1時間）
@@ -129,7 +129,7 @@ resume-saas/
 |---|---|
 | IaC | Terraform >= 1.5 |
 | Backend | Python 3.12 / AWS Lambda |
-| AI | Claude API (`claude-sonnet-4-20250514`) |
+| AI | Claude API (`claude-sonnet-4-6`) |
 | Frontend | 純粋なHTML / CSS / Vanilla JS（フレームワークなし） |
 | 決済 | Stripe（日本円 / JPY） |
 | DB | DynamoDB（IPレート管理のみ） |
@@ -141,7 +141,7 @@ resume-saas/
 
 ```python
 # モデル: 常にこれを使う
-MODEL = "claude-sonnet-4-20250514"
+MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 8000
 
 # 1件あたりのトークン目安
@@ -254,6 +254,13 @@ secrets/
 - 印刷対応: @media print でクリーンA4出力
 - レスポンシブ: モバイル対応
 ```
+
+---
+
+## 言語ルール
+
+ユーザー向けの全テキスト（UI、エラーメッセージ、メール文面）は必ず日本語。
+コードのコメントも日本語OK。
 
 ---
 

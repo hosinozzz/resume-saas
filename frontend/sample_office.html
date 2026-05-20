@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山田 花子 — ポートフォリオ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:    #0a0f1e;
+  --navy2:   #0d1529;
+  --navy3:   #111d3a;
+  --cyan:    #00d4ff;
+  --cyan2:   #00a8cc;
+  --cyan3:   #006f88;
+  --white:   #e8f0ff;
+  --gray:    #8899bb;
+  --card:    rgba(255,255,255,.04);
+  --border:  rgba(0,212,255,.15);
+  --radius:  12px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  line-height: 1.7;
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  padding: 4rem 2rem;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,212,255,.12) 0%, transparent 70%),
+    linear-gradient(180deg, #050a18 0%, var(--navy) 100%);
+}
+.hero-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 700px; }
+
+.hero-kana {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .85rem;
+  letter-spacing: .3em;
+  color: var(--cyan);
+  margin-bottom: .5rem;
+}
+
+.hero-name {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(3.5rem, 10vw, 6rem);
+  letter-spacing: .08em;
+  background: linear-gradient(135deg, var(--white) 40%, var(--cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.hero-badge {
+  display: inline-block;
+  margin: 1rem 0;
+  padding: .3rem 1.2rem;
+  border: 1px solid var(--cyan3);
+  border-radius: 999px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--cyan);
+  letter-spacing: .1em;
+}
+
+.hero-summary {
+  font-size: 1rem;
+  color: var(--gray);
+  max-width: 540px;
+  margin: 0 auto 1.5rem;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-size: .85rem;
+  color: var(--gray);
+}
+
+/* ── SECTIONS ── */
+.section { padding: 5rem 2rem; }
+.section-alt { background: var(--navy2); }
+.container { max-width: 900px; margin: 0 auto; }
+
+.section-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2.8rem;
+  letter-spacing: .12em;
+  color: var(--white);
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: .7rem;
+}
+.section-title span {
+  font-size: 1rem;
+  color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── SKILLS ── */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.skill-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.4rem;
+  transition: border-color .3s, transform .3s;
+}
+.skill-card:hover { border-color: var(--cyan2); transform: translateY(-3px); }
+
+.skill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: .6rem; }
+
+.skill-category {
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--white);
+}
+.skill-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--cyan);
+}
+
+.skill-bar {
+  height: 4px;
+  background: rgba(255,255,255,.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: .8rem;
+}
+.skill-fill {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--cyan3), var(--cyan));
+  border-radius: 2px;
+  transition: width 1.2s cubic-bezier(.4,0,.2,1);
+}
+
+.skill-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+.tag {
+  padding: .2rem .6rem;
+  background: rgba(0,212,255,.1);
+  border: 1px solid rgba(0,212,255,.2);
+  border-radius: 4px;
+  font-size: .75rem;
+  color: var(--cyan);
+  white-space: nowrap;
+}
+
+/* ── CERTS ── */
+.certs-list { display: flex; flex-direction: column; gap: .7rem; }
+
+.cert-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .8rem 1.2rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  flex-wrap: wrap;
+}
+.cert-item.top { border-color: rgba(255,215,0,.3); }
+
+.cert-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--gray);
+  min-width: 70px;
+}
+.cert-name { flex: 1; font-size: .95rem; }
+
+.top-badge {
+  font-size: .7rem;
+  padding: .15rem .5rem;
+  background: rgba(255,215,0,.12);
+  border: 1px solid rgba(255,215,0,.3);
+  color: gold;
+  border-radius: 4px;
+}
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--cyan) 0%, transparent 100%);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 2.5rem;
+  padding-left: 1.5rem;
+}
+
+.tl-dot {
+  position: absolute;
+  left: -2.35rem;
+  top: .35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.tl-period {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  color: var(--cyan);
+  margin-bottom: .2rem;
+}
+.tl-company {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: .15rem;
+}
+.tl-role {
+  font-size: .9rem;
+  color: var(--gray);
+  margin-bottom: .7rem;
+}
+
+.tl-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  margin-bottom: .8rem;
+}
+.tl-bullets li::before {
+  content: '▸ ';
+  color: var(--cyan);
+  font-size: .8em;
+}
+.tl-bullets li { font-size: .9rem; color: var(--gray); }
+
+.tl-tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+.tag-sm { font-size: .7rem; padding: .15rem .5rem; }
+
+/* ── PROFILE ── */
+.profile-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+}
+.profile-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+.profile-table th, .profile-table td { padding: .6rem .8rem; }
+.profile-table th {
+  text-align: left;
+  color: var(--cyan);
+  font-size: .85rem;
+  width: 120px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.profile-table td { font-size: .95rem; }
+.profile-table tr:not(:last-child) td,
+.profile-table tr:not(:last-child) th {
+  border-bottom: 1px solid var(--border);
+}
+
+.pr-box h3 {
+  font-size: .85rem;
+  color: var(--cyan);
+  margin-bottom: .5rem;
+  font-weight: 400;
+}
+.pr-box p { font-size: .95rem; color: var(--gray); }
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  background: #050a18;
+  color: var(--gray);
+  font-size: .8rem;
+}
+.accent { color: var(--cyan); }
+
+/* ── ANIMATIONS ── */
+.fade-in { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+.fade-in.visible { opacity: 1; transform: none; }
+
+.empty { color: var(--gray); font-size: .9rem; }
+
+/* ── PRINT ── */
+@media print {
+  body { background: #fff; color: #111; }
+  .hero { min-height: auto; page-break-after: always; }
+  .hero-bg, .hero-bg::after { display: none; }
+  .hero-name { -webkit-text-fill-color: #111; }
+  .section, .section-alt { background: #fff; padding: 1.5rem 0; }
+  .skill-fill { background: #333 !important; }
+  .fade-in { opacity: 1 !important; transform: none !important; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .skills-grid { grid-template-columns: 1fr; }
+  .section-title { font-size: 2rem; }
+  .hero-name { font-size: 3rem; }
+  .timeline { padding-left: 1.2rem; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content fade-in">
+    <p class="hero-kana">YAMADA HANAKO</p>
+    <h1 class="hero-name">山田 花子</h1>
+    <p class="hero-badge">DX推進・業務改善スペシャリスト / 経験 5年</p>
+    <p class="hero-summary">一般事務から業務改善スペシャリストへ転身。UiPath RPAで月間200時間の手動作業を自動化。SQL・pandasを活用したデータ分析で経営判断をサポート。現場知識とIT技術を組み合わせた実践的なDX推進が強み。</p>
+    <div class="hero-meta">
+      <span>📍 大阪府大阪市</span>
+      <span>📞 070-XXXX-XXXX</span>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <div class="container">
+    <h2 class="section-title fade-in"><span>01</span>SKILLS</h2>
+    <div class="skills-grid fade-in">
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">RPA / Automation</span>
+          <span class="skill-pct">90%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+        <div class="skill-tags"><span class="tag">UiPath</span> <span class="tag">Power Automate</span> <span class="tag">VBA/Excel</span> <span class="tag">Google Apps Script</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Data Analysis</span>
+          <span class="skill-pct">80%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div>
+        <div class="skill-tags"><span class="tag">SQL</span> <span class="tag">pandas</span> <span class="tag">Excel関数・ピボット</span> <span class="tag">Tableau</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Business Tools</span>
+          <span class="skill-pct">85%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div>
+        <div class="skill-tags"><span class="tag">Power BI</span> <span class="tag">Notion</span> <span class="tag">Slack</span> <span class="tag">kintone</span> <span class="tag">Salesforce</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Programming</span>
+          <span class="skill-pct">70%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div>
+        <div class="skill-tags"><span class="tag">Python（基礎〜中級）</span> <span class="tag">SQL（中級）</span> <span class="tag">VBA（上級）</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Project Management</span>
+          <span class="skill-pct">75%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="75"></div></div>
+        <div class="skill-tags"><span class="tag">要件定義</span> <span class="tag">業務フロー設計</span> <span class="tag">Backlog</span> <span class="tag">チームリード</span></div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-header">
+          <span class="skill-category">Accounting / Finance</span>
+          <span class="skill-pct">80%</span>
+        </div>
+        <div class="skill-bar"><div class="skill-fill" data-pct="80"></div></div>
+        <div class="skill-tags"><span class="tag">簿記2級</span> <span class="tag">経費精算</span> <span class="tag">予実管理</span> <span class="tag">原価計算</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="section section-alt" id="certs">
+  <div class="container">
+    <h2 class="section-title fade-in"><span>02</span>CERTIFICATIONS</h2>
+    <div class="certs-list fade-in">
+      <div class="cert-item top"><span class="cert-date">2024-01</span><span class="cert-name">UiPath Certified Professional – RPA Developer Advanced</span><span class="top-badge">★ 主要資格</span></div>
+      <div class="cert-item top"><span class="cert-date">2023-08</span><span class="cert-name">日商簿記検定2級</span><span class="top-badge">★ 主要資格</span></div>
+      <div class="cert-item"><span class="cert-date">2023-05</span><span class="cert-name">ITパスポート試験</span></div>
+      <div class="cert-item"><span class="cert-date">2022-11</span><span class="cert-name">VBAエキスパート（Excel VBAスタンダード）</span></div>
+      <div class="cert-item"><span class="cert-date">2022-04</span><span class="cert-name">Microsoft Power Platform Fundamentals (PL-900)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CAREER -->
+<section class="section" id="career">
+  <div class="container">
+    <h2 class="section-title fade-in"><span>03</span>CAREER</h2>
+    <div class="timeline fade-in">
+      <div class="timeline-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <p class="tl-period">2021.01 – 現在</p>
+          <h3 class="tl-company">株式会社デジタルフォワード</h3>
+          <p class="tl-role">DX推進・業務改善担当</p>
+          <ul class='tl-bullets'>            <li>UiPathを用いた請求書処理・勤怠集計の完全自動化（月200時間削減）</li>
+            <li>kintone + Python連携による受注管理システムを内製開発</li>
+            <li>Power BI ダッシュボード構築で週次の経営報告資料作成を自動化</li>
+            <li>DXプロジェクトのPMとして5名のチームをリード</li></ul>
+          <div class='tl-tags'><span class="tag tag-sm">UiPath</span> <span class="tag tag-sm">Python</span> <span class="tag tag-sm">Power BI</span> <span class="tag tag-sm">kintone</span> <span class="tag tag-sm">SQL</span></div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="tl-dot"></div>
+        <div class="tl-content">
+          <p class="tl-period">2013.04 – 2020.12</p>
+          <h3 class="tl-company">丸山産業株式会社</h3>
+          <p class="tl-role">一般事務→営業事務・経理補助</p>
+          <ul class='tl-bullets'>            <li>受注・在庫・請求の管理業務を担当（ピーク時月500件処理）</li>
+            <li>Excel VBAで帳票出力を自動化し部門全体の残業を週10時間削減</li>
+            <li>経理補助として月次決算・年次決算をサポート</li></ul>
+          <div class='tl-tags'><span class="tag tag-sm">Excel/VBA</span> <span class="tag tag-sm">経理</span> <span class="tag tag-sm">在庫管理</span> <span class="tag tag-sm">Salesforce</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section class="section section-alt" id="profile">
+  <div class="container">
+    <h2 class="section-title fade-in"><span>04</span>PROFILE</h2>
+    <div class="profile-card fade-in">
+      <table class="profile-table">
+        <tr><th>氏名</th><td>山田 花子&emsp;<small>YAMADA HANAKO</small></td></tr>
+        <tr><th>生年月日</th><td>1990年2月28日</td></tr>
+        <tr><th>所在地</th><td>大阪府大阪市</td></tr>
+        <tr><th>電話番号</th><td>070-XXXX-XXXX</td></tr>
+      </table>
+      <div class='pr-box'><h3>自己PR</h3><p>一般事務から業務改善・DX推進担当へとステップアップし、RPAや分析ツールを活用した業務効率化を5年間推進してきました。現場の課題を深く理解した上でテクノロジーを活用できることが強みです。エンジニアとビジネス側の橋渡し役として活躍したいと考えています。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>Generated by <span class="accent">Resume AI</span></p>
+</footer>
+
+<script>
+
+// スクロール連動フェードイン
+(function () {
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-in').forEach(function (el) { io.observe(el); });
+})();
+
+// スキルバーアニメーション（可視化後に幅をセット）
+(function () {
+  var barIo = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        var fill = e.target.querySelector('.skill-fill');
+        if (fill) fill.style.width = fill.dataset.pct + '%';
+        barIo.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.skill-card').forEach(function (el) { barIo.observe(el); });
+})();
+
+</script>
+</body>
+</html>

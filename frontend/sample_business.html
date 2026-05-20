@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>鈴木 大輔 — ポートフォリオ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f4f7fb;--navy:#1e3a6e;--blue:#2563eb;
+  --text:#1a1a2e;--gray:#64748b;--border:#e2e8f0;--card:#ffffff;
+  --radius:8px;--shadow:0 1px 4px rgba(0,0,0,.08);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
+.accent-top{height:5px;background:linear-gradient(90deg,var(--navy),var(--blue))}
+.hero{background:var(--bg2);padding:4rem 2rem 3.5rem;border-bottom:1px solid var(--border)}
+.hero-inner{max-width:920px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:center}
+.hero-name{font-size:clamp(2rem,5vw,3.4rem);font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:.4rem}
+.hero-kana{font-size:.8rem;color:var(--gray);letter-spacing:.1em;margin-bottom:.7rem}
+.hero-badge{display:inline-block;padding:.35rem 1rem;background:var(--navy);color:#fff;font-size:.75rem;border-radius:4px;letter-spacing:.05em}
+.hero-exp{font-family:'JetBrains Mono',monospace;font-size:.76rem;color:var(--blue);letter-spacing:.12em;margin-bottom:.5rem}
+.hero-summary{font-size:.95rem;color:var(--text);line-height:1.9;margin-bottom:1rem}
+.hero-meta{display:flex;gap:1.5rem;flex-wrap:wrap;font-size:.82rem;color:var(--gray)}
+.section{padding:4.5rem 2rem}
+.section-alt{background:var(--bg2)}
+.container{max-width:920px;margin:0 auto}
+.section-title{font-size:1.45rem;font-weight:700;color:var(--navy);margin-bottom:2rem;
+  padding-left:.9rem;border-left:4px solid var(--blue);display:flex;align-items:center;gap:.7rem}
+.section-title span{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blue);font-weight:400}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.2rem 1.4rem;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s}
+.skill-card:hover{box-shadow:0 4px 14px rgba(37,99,235,.1);transform:translateY(-2px)}
+.skill-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.skill-category{font-weight:700;font-size:.9rem;color:var(--navy)}
+.skill-pct{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blue)}
+.skill-bar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:.8rem}
+.skill-fill{height:100%;width:0;background:linear-gradient(90deg,var(--navy),var(--blue));
+  border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag{padding:.18rem .55rem;background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18);
+  border-radius:4px;font-size:.72rem;color:var(--blue)}
+.certs-list{display:flex;flex-direction:column;gap:.6rem}
+.cert-item{display:flex;align-items:center;gap:1rem;padding:.75rem 1rem;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.cert-item.top{border-left:3px solid #f59e0b}
+.cert-date{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--gray);min-width:68px}
+.cert-name{flex:1;font-size:.92rem}
+.top-badge{font-size:.66rem;padding:.12rem .45rem;background:rgba(245,158,11,.1);
+  border:1px solid rgba(245,158,11,.3);color:#b45309;border-radius:3px}
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--navy),rgba(37,99,235,.1))}
+.timeline-item{position:relative;margin-bottom:2.5rem;padding-left:1.5rem}
+.tl-dot{position:absolute;left:-2.35rem;top:.4rem;width:11px;height:11px;border-radius:50%;
+  background:var(--blue);border:2px solid var(--bg)}
+.tl-period{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--blue);margin-bottom:.2rem}
+.tl-company{font-size:1.15rem;font-weight:700;color:var(--navy);margin-bottom:.12rem}
+.tl-role{font-size:.88rem;color:var(--gray);margin-bottom:.65rem}
+.tl-bullets{list-style:none;display:flex;flex-direction:column;gap:.3rem;margin-bottom:.7rem}
+.tl-bullets li{font-size:.88rem;color:var(--text);padding-left:.9rem;position:relative}
+.tl-bullets li::before{content:'›';position:absolute;left:0;color:var(--blue);font-weight:700}
+.tl-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag-sm{font-size:.7rem;padding:.12rem .48rem}
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow)}
+.profile-table{width:100%;border-collapse:collapse;margin-bottom:1.4rem}
+.profile-table th,.profile-table td{padding:.55rem .8rem}
+.profile-table th{text-align:left;color:var(--navy);font-size:.83rem;width:120px;font-weight:700}
+.profile-table tr:not(:last-child) td,.profile-table tr:not(:last-child) th{border-bottom:1px solid var(--border)}
+.pr-box h3{font-size:.83rem;color:var(--navy);margin-bottom:.4rem;font-weight:700}
+.pr-box p{font-size:.92rem;color:var(--gray)}
+.footer{text-align:center;padding:2rem;background:var(--navy);color:rgba(255,255,255,.55);font-size:.78rem}
+.accent{color:rgba(147,197,253,1)}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:none}
+.empty{color:var(--gray);font-size:.88rem}
+@media print{.accent-top{display:none}body{color:#111;background:#fff}
+  .hero{background:#f8faff;border-bottom:2px solid var(--navy);padding:1.5rem 1rem}
+  .section-alt{background:#fff}.fade-in{opacity:1!important;transform:none!important}
+  .skill-fill{background:var(--navy)!important}}
+@media(max-width:700px){.hero-inner{grid-template-columns:1fr}.skills-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="accent-top"></div>
+<section class="hero">
+  <div class="hero-inner">
+    <div class="fade-in">
+      <p class="hero-kana">SUZUKI DAISUKE</p>
+      <h1 class="hero-name">鈴木 大輔</h1>
+      <span class="hero-badge">法人営業部長</span>
+    </div>
+    <div class="fade-in">
+      <p class="hero-exp">EXPERIENCE 16 YEARS</p>
+      <p class="hero-summary">大手SIer法人営業部長として16年間、売上・組織の両軸でリード。担当顧客の年間IT投資額を平均2.3倍に拡大。40名のチームをマネジメントし、部門売上目標を3期連続達成。戦略立案から商談クローズまで一気通貫で推進。</p>
+      <div class="hero-meta">
+        <span>📍 東京都港区</span>
+        <span>📞 090-XXXX-XXXX</span>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section" id="skills"><div class="container">
+  <h2 class="section-title fade-in"><span>01</span> SKILLS</h2>
+  <div class="skills-grid fade-in"><div class="skill-card"><div class="skill-header"><span class="skill-category">営業 / 提案</span><span class="skill-pct">95%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div><div class="skill-tags"><span class="tag">ソリューション営業</span> <span class="tag">RFP対応</span> <span class="tag">提案書作成</span> <span class="tag">見積・契約交渉</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">マネジメント</span><span class="skill-pct">90%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div><div class="skill-tags"><span class="tag">チームリード（40名）</span> <span class="tag">KPI設計</span> <span class="tag">人材育成</span> <span class="tag">OKR推進</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">CRM / ツール</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div><div class="skill-tags"><span class="tag">Salesforce</span> <span class="tag">HubSpot</span> <span class="tag">PowerPoint</span> <span class="tag">Excel（VBA）</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">マーケティング</span><span class="skill-pct">75%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="75"></div></div><div class="skill-tags"><span class="tag">アカウントプラン</span> <span class="tag">ABM</span> <span class="tag">ウェビナー企画</span> <span class="tag">展示会運営</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">IT知識</span><span class="skill-pct">70%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div><div class="skill-tags"><span class="tag">クラウドサービス</span> <span class="tag">ERP/CRM</span> <span class="tag">DX提案</span> <span class="tag">セキュリティ基礎</span></div></div></div>
+</div></section>
+<section class="section section-alt" id="certs"><div class="container">
+  <h2 class="section-title fade-in"><span>02</span> CERTIFICATIONS</h2>
+  <div class="certs-list fade-in"><div class="cert-item top"><span class="cert-date">2022-09</span><span class="cert-name">ITストラテジスト試験（IPA）</span><span class="top-badge">★ 主要</span></div>
+<div class="cert-item top"><span class="cert-date">2020-06</span><span class="cert-name">PMP（Project Management Professional）</span><span class="top-badge">★ 主要</span></div>
+<div class="cert-item"><span class="cert-date">2018-03</span><span class="cert-name">応用情報技術者試験（IPA）</span></div>
+<div class="cert-item"><span class="cert-date">2015-11</span><span class="cert-name">TOEIC 835点</span></div></div>
+</div></section>
+<section class="section" id="career"><div class="container">
+  <h2 class="section-title fade-in"><span>03</span> CAREER</h2>
+  <div class="timeline fade-in"><div class="timeline-item"><div class="tl-dot"></div><div class="tl-content"><p class="tl-period">2019.04 – 現在</p><h3 class="tl-company">株式会社フューチャーシステムズ</h3><p class="tl-role">法人営業部 部長</p><ul class="tl-bullets"><li>大手製造業・金融機関向けDXソリューション営業をリード（担当顧客50社）</li>
+<li>部門売上を4年間で1.8倍（28億→50億）に拡大、3期連続目標達成</li>
+<li>40名のチームマネジメント。新卒・中途育成プログラムを設計・導入</li>
+<li>社内横断プロジェクトのPMとして、CRM統合・営業プロセス標準化を推進</li></ul><div class="tl-tags"><span class="tag tag-sm">法人営業</span> <span class="tag tag-sm">Salesforce</span> <span class="tag tag-sm">DX提案</span> <span class="tag tag-sm">チームマネジメント</span></div></div></div>
+<div class="timeline-item"><div class="tl-dot"></div><div class="tl-content"><p class="tl-period">2009.04 – 2019.03</p><h3 class="tl-company">株式会社フューチャーシステムズ</h3><p class="tl-role">法人営業 → シニア営業</p><ul class="tl-bullets"><li>中堅・中小企業向けERPシステムの新規開拓営業（年間新規20社獲得）</li>
+<li>最優秀営業賞を4回受賞。新規取引先からの累計受注100億円超</li>
+<li>営業企画として提案書テンプレート整備、部門全体の提案品質を向上</li></ul><div class="tl-tags"><span class="tag tag-sm">法人営業</span> <span class="tag tag-sm">ERP提案</span> <span class="tag tag-sm">新規開拓</span> <span class="tag tag-sm">KPI管理</span></div></div></div></div>
+</div></section>
+<section class="section section-alt" id="profile"><div class="container">
+  <h2 class="section-title fade-in"><span>04</span> PROFILE</h2>
+  <div class="profile-card fade-in"><table class="profile-table"><tr><th>氏名</th><td>鈴木 大輔&emsp;<small>SUZUKI DAISUKE</small></td></tr><tr><th>生年月日</th><td>1985年7月10日</td></tr><tr><th>所在地</th><td>東京都港区</td></tr><tr><th>電話番号</th><td>090-XXXX-XXXX</td></tr></table><div class="pr-box"><h3>自己PR</h3><p>大手SIerでの法人営業16年間で、累計受注100億円超を達成。顧客の経営課題を深く理解したソリューション提案と、チーム全体の育成・組織づくりに強みがあります。新規市場開拓とアカウントマネジメントを両立できるプレイングマネージャーです。</p></div></div>
+</div></section>
+<footer class="footer"><p>Generated by <span class="accent">Resume AI</span></p></footer>
+<script>
+(function(){
+  var io=new IntersectionObserver(function(e){
+    e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll('.fade-in').forEach(function(el){io.observe(el);});
+})();
+(function(){
+  var bio=new IntersectionObserver(function(e){
+    e.forEach(function(x){
+      if(x.isIntersecting){
+        var f=x.target.querySelector('.skill-fill');
+        if(f)f.style.width=f.dataset.pct+'%';
+        bio.unobserve(x.target);
+      }
+    });
+  },{threshold:0.3});
+  document.querySelectorAll('.skill-card').forEach(function(el){bio.observe(el);});
+})();
+</script>
+</body></html>

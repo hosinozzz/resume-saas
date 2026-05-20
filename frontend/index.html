@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResumeAI — 履歴書をAIポートフォリオに変換</title>
+<meta name="description" content="履歴書・職務経歴書をアップロードするだけで、AIが採用担当者の目を引くHTMLポートフォリオを即座に生成。¥250（オープニングセール）。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&family=JetBrains+Mono:wght@400;700&family=Lora:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 7rem 1.5rem 5rem;
+  overflow: hidden; text-align: center;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,212,255,.12) 0%, transparent 70%),
+    linear-gradient(180deg, #050a18 0%, var(--navy) 100%);
+}
+.hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+.hero-inner { position: relative; z-index: 1; max-width: 700px; width: 100%; }
+.hero-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; letter-spacing: .28em; color: var(--cyan); margin-bottom: 1rem;
+}
+.hero-headline {
+  font-family: 'Bebas Neue', cursive;
+  font-size: clamp(2rem, 4.8vw, 3.2rem);
+  line-height: 1.12; letter-spacing: .06em;
+  background: linear-gradient(135deg, var(--white) 40%, var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 1.4rem;
+}
+.hero-sub { font-size: 1rem; color: var(--gray); margin-bottom: 2rem; line-height: 1.8; }
+.hero-sale-badge {
+  display: inline-flex; align-items: baseline; gap: .7rem;
+  padding: .7rem 1.6rem;
+  border: 1px solid rgba(245,166,35,.35);
+  border-radius: 8px; background: rgba(245,166,35,.07); margin-bottom: 2rem;
+}
+.hero-sale-badge del { font-size: 1rem; color: var(--gray); }
+.hero-sale-badge .amount { font-family: 'Bebas Neue', cursive; font-size: 2.4rem; color: #f5a623; line-height: 1; }
+.hero-sale-badge .badge {
+  font-size: .72rem; color: var(--cyan);
+  background: rgba(0,212,255,.1); border: 1px solid rgba(0,212,255,.25);
+  border-radius: 4px; padding: .2rem .55rem;
+}
+.hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* ── SAMPLE CARDS ── */
+.samples-section { padding: 5rem 1.5rem 4rem; background: var(--navy2); }
+.section-head { text-align: center; margin-bottom: 2.5rem; }
+.section-head h2 {
+  font-family: 'Bebas Neue', cursive; font-size: 2.4rem;
+  letter-spacing: .1em; margin-bottom: .4rem;
+}
+.section-head h2 span { color: var(--cyan); }
+.section-head p { font-size: .88rem; color: var(--gray); }
+
+.samples-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.sample-card {
+  display: block; text-decoration: none;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.07);
+  box-shadow: 0 8px 28px rgba(0,0,0,.4);
+  transition: transform .22s, box-shadow .22s;
+}
+.sample-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,0,0,.55); }
+
+.sc-preview { height: 196px; overflow: hidden; position: relative; }
+
+.sc-footer {
+  display: flex; flex-direction: column; gap: .28rem;
+  padding: .85rem 1.1rem .8rem;
+  background: rgba(255,255,255,.04);
+  border-top: 1px solid rgba(255,255,255,.07);
+}
+.sc-badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .64rem; letter-spacing: .1em;
+  padding: .17rem .55rem; border-radius: 3px;
+  margin-bottom: .08rem; width: fit-content;
+}
+.sc-name  { font-weight: 700; font-size: .95rem; color: var(--white); }
+.sc-role  { font-size: .74rem; color: var(--gray); }
+.sc-link  {
+  margin-top: .3rem;
+  font-size: .74rem; color: var(--cyan);
+  font-family: 'JetBrains Mono', monospace; letter-spacing: .03em;
+}
+
+/* ── HOW IT WORKS ── */
+.how-section { padding: 5rem 1.5rem; }
+.how-section h2 {
+  font-family: 'Bebas Neue', cursive; font-size: 2.4rem;
+  letter-spacing: .1em; text-align: center; margin-bottom: 2.5rem;
+}
+.how-section h2 span { color: var(--cyan); }
+.steps {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; max-width: 800px; margin: 0 auto;
+}
+.step {
+  text-align: center; padding: 1.8rem 1rem;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.step-num  { font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--cyan); letter-spacing: .15em; margin-bottom: .5rem; }
+.step-icon { font-size: 2rem; margin-bottom: .8rem; }
+.step-title { font-weight: 700; margin-bottom: .4rem; font-size: .95rem; }
+.step-desc  { font-size: .82rem; color: var(--gray); }
+
+/* ── UPLOAD ── */
+.upload-section { padding: 5rem 1.5rem 6rem; background: var(--navy2); }
+.upload-inner   { max-width: 540px; margin: 0 auto; }
+.upload-head    { text-align: center; margin-bottom: 2rem; }
+.upload-head h2 { font-family: 'Bebas Neue', cursive; font-size: 2.4rem; letter-spacing: .1em; margin-bottom: .4rem; }
+.upload-head h2 span { color: var(--cyan); }
+.upload-head p  { font-size: .9rem; color: var(--gray); }
+
+.upload-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow);
+}
+.file-list { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; min-height: 2.5rem; }
+.file-list-empty {
+  text-align: center; color: var(--gray); font-size: .82rem;
+  padding: .8rem; border: 1px dashed rgba(0,212,255,.15); border-radius: 8px;
+}
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.file-item {
+  display: flex; align-items: center; gap: .7rem;
+  padding: .6rem .9rem;
+  background: rgba(0,212,255,.05); border: 1px solid rgba(0,212,255,.18);
+  border-radius: 10px; animation: fadeSlideIn .18s ease;
+}
+.file-item-icon { font-size: 1.3rem; flex-shrink: 0; }
+.file-item-info { flex: 1; min-width: 0; }
+.file-item-name { font-size: .85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-item-size { font-size: .72rem; color: var(--gray); }
+.file-label-select {
+  background: var(--navy3); border: 1px solid var(--border);
+  color: var(--white); border-radius: 6px; font-size: .78rem;
+  padding: .28rem .45rem; cursor: pointer; flex-shrink: 0;
+  font-family: 'Noto Sans JP', sans-serif; outline: none;
+}
+.file-label-select:focus { border-color: var(--cyan); }
+.file-item-remove {
+  background: none; border: none; color: var(--gray);
+  cursor: pointer; font-size: 1rem; padding: 4px; line-height: 1; flex-shrink: 0;
+}
+.file-item-remove:hover { color: var(--danger); }
+.add-file-area {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  gap: .5rem; padding: .85rem;
+  border: 2px dashed var(--border); border-radius: 10px; cursor: pointer;
+  transition: border-color .2s, background .2s;
+  font-size: .88rem; color: var(--cyan); margin-bottom: 1rem; user-select: none;
+}
+.add-file-area:hover, .add-file-area.drag-over { border-color: var(--cyan); background: rgba(0,212,255,.04); }
+.add-file-area.disabled { opacity: .35; cursor: not-allowed; pointer-events: none; }
+.add-file-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+.add-file-hint { color: var(--gray); font-size: .76rem; }
+.upload-btn-wrap .btn { width: 100%; justify-content: center; font-size: 1rem; padding: .9rem; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) { .samples-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) {
+  .samples-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Resume<span>AI</span></a>
+  <a href="#upload" class="btn btn-outline" style="padding:.4rem 1rem;font-size:.82rem;">今すぐ作る →</a>
+</nav>
+
+<!-- ① HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">AI POWERED RESUME REMAKE</p>
+    <h1 class="hero-headline">あなたの履歴書を、採用担当者が思わず見入るポートフォリオへ</h1>
+    <p class="hero-sub">
+      AIが職務経歴を分析し、業種に合ったデザインで<br>
+      プロ品質のHTMLポートフォリオを即座に生成。
+    </p>
+    <div class="hero-sale-badge">
+      <del>¥500</del>
+      <span class="amount">¥250</span>
+      <span class="badge">オープニングセール 50% OFF</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#upload" class="btn btn-primary" style="padding:.85rem 2rem;font-size:1rem;">✦ 今すぐ作る</a>
+      <a href="#showcase" class="btn btn-outline" style="padding:.85rem 1.6rem;font-size:.95rem;">サンプルを見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- ② SAMPLE CARDS 3列グリッド -->
+<section class="samples-section" id="showcase">
+  <div class="section-head">
+    <h2>こんな<span>ポートフォリオ</span>が作れます</h2>
+    <p>AIが業種を自動判別 — 6種のテンプレートから最適なデザインを選択します</p>
+  </div>
+
+  <div class="samples-grid">
+
+    <!-- Dark Tech — 田中 健太 -->
+    <a class="sample-card" href="sample_it.html" target="_blank">
+      <div class="sc-preview" style="background:#050a18;">
+        <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(0,212,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,.05) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;"></div>
+        <div style="position:absolute;top:-30px;left:18%;width:280px;height:150px;background:radial-gradient(ellipse,rgba(0,212,255,.22) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="position:relative;padding:1.4rem 1.5rem .8rem;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.57rem;color:#00d4ff;letter-spacing:.2em;margin-bottom:.5rem;">CLOUD INFRASTRUCTURE ENGINEER · 7 YRS</div>
+          <div style="font-family:'Bebas Neue',cursive;font-size:2.2rem;line-height:1;background:linear-gradient(135deg,#fff 40%,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">田中 健太</div>
+        </div>
+        <div style="margin:0 1.5rem;height:1px;background:linear-gradient(90deg,rgba(0,212,255,.5),transparent);"></div>
+        <div style="padding:.8rem 1.5rem;display:flex;flex-direction:column;gap:.42rem;">
+          <div style="display:flex;align-items:center;gap:.7rem;"><span style="font-family:'JetBrains Mono',monospace;font-size:.57rem;color:rgba(255,255,255,.55);width:68px;flex-shrink:0;">AWS</span><div style="flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;"><div style="width:95%;height:100%;background:linear-gradient(90deg,#00d4ff,rgba(0,212,255,.3));border-radius:2px;"></div></div></div>
+          <div style="display:flex;align-items:center;gap:.7rem;"><span style="font-family:'JetBrains Mono',monospace;font-size:.57rem;color:rgba(255,255,255,.55);width:68px;flex-shrink:0;">Terraform</span><div style="flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;"><div style="width:88%;height:100%;background:linear-gradient(90deg,#00d4ff,rgba(0,212,255,.3));border-radius:2px;"></div></div></div>
+          <div style="display:flex;align-items:center;gap:.7rem;"><span style="font-family:'JetBrains Mono',monospace;font-size:.57rem;color:rgba(255,255,255,.55);width:68px;flex-shrink:0;">Kubernetes</span><div style="flex:1;height:3px;background:rgba(255,255,255,.07);border-radius:2px;"><div style="width:82%;height:100%;background:linear-gradient(90deg,#00d4ff,rgba(0,212,255,.3));border-radius:2px;"></div></div></div>
+        </div>
+        <div style="padding:.3rem 1.5rem;display:flex;gap:.35rem;flex-wrap:wrap;">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:#00d4ff;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:3px;padding:.12rem .45rem;">AWS SAP</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:#00d4ff;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:3px;padding:.12rem .45rem;">CKA</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.55rem;color:#00d4ff;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.22);border-radius:3px;padding:.12rem .45rem;">インフラ歴7年</span>
+        </div>
+      </div>
+      <div class="sc-footer">
+        <span class="sc-badge" style="color:#00d4ff;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);">Dark Tech</span>
+        <span class="sc-name">田中 健太</span>
+        <span class="sc-role">クラウドインフラエンジニア · 7年</span>
+        <span class="sc-link">プレビューを見る ↗</span>
+      </div>
+    </a>
+
+    <!-- Business Clean — 鈴木 大輔 -->
+    <a class="sample-card" href="sample_business.html" target="_blank">
+      <div class="sc-preview" style="background:#fff;font-family:'Noto Sans JP',sans-serif;">
+        <div style="height:4px;background:linear-gradient(90deg,#1e3a5f,#3b82f6);"></div>
+        <div style="display:flex;height:calc(100% - 4px);">
+          <div style="width:38%;background:#1e3a5f;padding:1.1rem 1rem;display:flex;flex-direction:column;gap:.65rem;">
+            <div>
+              <div style="font-size:.5rem;color:rgba(255,255,255,.35);letter-spacing:.14em;margin-bottom:.3rem;">GENERAL MANAGER</div>
+              <div style="font-family:'Bebas Neue',cursive;font-size:1.8rem;color:#fff;line-height:1;margin-bottom:.18rem;">鈴木<br>大輔</div>
+              <div style="font-size:.5rem;color:rgba(255,255,255,.25);letter-spacing:.08em;">16 YRS CAREER</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:.28rem;">
+              <div style="font-size:.54rem;color:rgba(255,255,255,.4);display:flex;gap:.3rem;align-items:center;"><span style="color:#60a5fa;">▸</span>中小企業診断士</div>
+              <div style="font-size:.54rem;color:rgba(255,255,255,.4);display:flex;gap:.3rem;align-items:center;"><span style="color:#60a5fa;">▸</span>MBA（慶應BS）</div>
+              <div style="font-size:.54rem;color:rgba(255,255,255,.4);display:flex;gap:.3rem;align-items:center;"><span style="color:#60a5fa;">▸</span>TOEIC 840</div>
+            </div>
+          </div>
+          <div style="flex:1;padding:1.1rem .95rem;">
+            <div style="font-size:.5rem;color:#3b82f6;letter-spacing:.14em;font-weight:700;margin-bottom:.65rem;text-transform:uppercase;">Career Highlights</div>
+            <div style="display:flex;flex-direction:column;gap:.48rem;">
+              <div style="border-left:3px solid #3b82f6;padding:.05rem .7rem;">
+                <div style="font-size:.69rem;font-weight:700;color:#1e3a5f;margin-bottom:.1rem;">年間売上 ¥8.5億 達成</div>
+                <div style="font-size:.57rem;color:#64748b;">新規顧客127社獲得 / チーム12名</div>
+              </div>
+              <div style="border-left:3px solid #e2e8f0;padding:.05rem .7rem;">
+                <div style="font-size:.69rem;font-weight:700;color:#1e3a5f;margin-bottom:.1rem;">SFAシステム全社展開リード</div>
+                <div style="font-size:.57rem;color:#64748b;">商談管理効率 40% 向上</div>
+              </div>
+              <div style="border-left:3px solid #e2e8f0;padding:.05rem .7rem;">
+                <div style="font-size:.69rem;font-weight:700;color:#1e3a5f;margin-bottom:.1rem;">東南アジア代理店開拓</div>
+                <div style="font-size:.57rem;color:#64748b;">5カ国パートナー契約</div>
+              </div>
+            </div>
+            <div style="margin-top:.6rem;display:flex;gap:.3rem;flex-wrap:wrap;">
+              <span style="font-size:.57rem;color:#1e3a5f;background:#f0f4f8;border-radius:3px;padding:.14rem .48rem;">法人営業</span>
+              <span style="font-size:.57rem;color:#1e3a5f;background:#f0f4f8;border-radius:3px;padding:.14rem .48rem;">マネジメント</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-footer">
+        <span class="sc-badge" style="color:#60a5fa;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);">Business Clean</span>
+        <span class="sc-name">鈴木 大輔</span>
+        <span class="sc-role">法人営業部長 · 16年</span>
+        <span class="sc-link">プレビューを見る ↗</span>
+      </div>
+    </a>
+
+    <!-- Minimal Pro — 伊藤 さくら -->
+    <a class="sample-card" href="sample_minimal.html" target="_blank">
+      <div class="sc-preview" style="background:#f9f9f7;font-family:'Noto Sans JP',sans-serif;">
+        <div style="padding:1.35rem 1.55rem 1rem;border-bottom:1px solid #ddddd8;">
+          <div style="font-size:.52rem;color:#bbb;letter-spacing:.18em;margin-bottom:.4rem;text-transform:uppercase;">Certified Public Accountant · Finance Mgr</div>
+          <div style="font-family:'Bebas Neue',cursive;font-size:2rem;color:#2c2c2c;line-height:1;letter-spacing:.04em;margin-bottom:.2rem;">伊藤 さくら</div>
+          <div style="font-size:.54rem;color:#ccc;letter-spacing:.1em;">ITO SAKURA · 12 YEARS</div>
+        </div>
+        <div style="padding:.95rem 1.55rem;display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+          <div>
+            <div style="font-size:.5rem;color:#bbb;letter-spacing:.16em;margin-bottom:.52rem;text-transform:uppercase;">Expertise</div>
+            <div style="display:flex;flex-direction:column;gap:.37rem;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:.35rem;border-bottom:1px solid #ddddd8;"><span style="font-size:.65rem;color:#2c2c2c;">財務・管理会計</span><span style="font-size:.51rem;color:#ccc;letter-spacing:-.04em;">●●●●○</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:.35rem;border-bottom:1px solid #ddddd8;"><span style="font-size:.65rem;color:#2c2c2c;">決算・財務報告</span><span style="font-size:.51rem;color:#ccc;letter-spacing:-.04em;">●●●●●</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;padding-bottom:.35rem;border-bottom:1px solid #ddddd8;"><span style="font-size:.65rem;color:#2c2c2c;">内部統制・監査</span><span style="font-size:.51rem;color:#ccc;letter-spacing:-.04em;">●●●●○</span></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:.5rem;color:#bbb;letter-spacing:.16em;margin-bottom:.52rem;text-transform:uppercase;">Credentials</div>
+            <div style="display:flex;flex-direction:column;gap:.37rem;">
+              <div style="font-size:.66rem;color:#2c2c2c;padding:.24rem 0;border-bottom:1px solid #ddddd8;">公認会計士</div>
+              <div style="font-size:.66rem;color:#2c2c2c;padding:.24rem 0;border-bottom:1px solid #ddddd8;">USCPA（CA州）</div>
+              <div style="font-size:.66rem;color:#2c2c2c;padding:.24rem 0;border-bottom:1px solid #ddddd8;">簿記1級</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-footer">
+        <span class="sc-badge" style="color:#9ca3af;background:rgba(156,163,175,.1);border:1px solid rgba(156,163,175,.25);">Minimal Pro</span>
+        <span class="sc-name">伊藤 さくら</span>
+        <span class="sc-role">公認会計士・経理マネージャー · 12年</span>
+        <span class="sc-link">プレビューを見る ↗</span>
+      </div>
+    </a>
+
+    <!-- Creative Bold — 中村 響 -->
+    <a class="sample-card" href="sample_creative.html" target="_blank">
+      <div class="sc-preview" style="background:#060010;">
+        <div style="position:absolute;top:-50px;left:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(124,58,237,.55) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="position:absolute;bottom:-30px;right:-30px;width:160px;height:160px;background:radial-gradient(circle,rgba(236,72,153,.45) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="position:relative;padding:1.4rem 1.5rem .8rem;">
+          <div style="font-size:.55rem;letter-spacing:.22em;background:linear-gradient(90deg,#a78bfa,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.45rem;text-transform:uppercase;">UI / UX DESIGNER · 5 YRS</div>
+          <div style="font-family:'Bebas Neue',cursive;font-size:2.5rem;line-height:.9;background:linear-gradient(135deg,#fff 0%,#a78bfa 40%,#ec4899 75%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">中村 響</div>
+        </div>
+        <div style="margin:0 1.5rem;height:1px;background:linear-gradient(90deg,rgba(167,139,250,.45),rgba(236,72,153,.35),transparent);"></div>
+        <div style="padding:.8rem 1.5rem;display:flex;gap:1rem;">
+          <div style="flex:1;">
+            <div style="font-size:.5rem;color:rgba(255,255,255,.3);letter-spacing:.14em;margin-bottom:.52rem;text-transform:uppercase;">Tools</div>
+            <div style="display:flex;flex-direction:column;gap:.4rem;">
+              <div style="display:flex;align-items:center;gap:.6rem;"><span style="font-size:.56rem;color:rgba(255,255,255,.5);width:52px;flex-shrink:0;">Figma</span><div style="flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;"><div style="width:98%;height:100%;background:linear-gradient(90deg,#a78bfa,#ec4899);border-radius:2px;"></div></div></div>
+              <div style="display:flex;align-items:center;gap:.6rem;"><span style="font-size:.56rem;color:rgba(255,255,255,.5);width:52px;flex-shrink:0;">React</span><div style="flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;"><div style="width:82%;height:100%;background:linear-gradient(90deg,#a78bfa,#ec4899);border-radius:2px;"></div></div></div>
+              <div style="display:flex;align-items:center;gap:.6rem;"><span style="font-size:.56rem;color:rgba(255,255,255,.5);width:52px;flex-shrink:0;">After FX</span><div style="flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;"><div style="width:70%;height:100%;background:linear-gradient(90deg,#a78bfa,#ec4899);border-radius:2px;"></div></div></div>
+            </div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:.5rem;color:rgba(255,255,255,.3);letter-spacing:.14em;margin-bottom:.52rem;text-transform:uppercase;">Awards</div>
+            <div style="display:flex;flex-direction:column;gap:.32rem;">
+              <div style="font-size:.58rem;color:rgba(255,255,255,.5);padding:.22rem .5rem;border:1px solid rgba(167,139,250,.25);border-radius:4px;">Good Design Award 2023</div>
+              <div style="font-size:.58rem;color:rgba(255,255,255,.5);padding:.22rem .5rem;border:1px solid rgba(236,72,153,.22);border-radius:4px;">Awwwards SOTD</div>
+              <div style="font-size:.58rem;color:rgba(255,255,255,.5);padding:.22rem .5rem;border:1px solid rgba(251,146,60,.2);border-radius:4px;">iF Design Award 2022</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-footer">
+        <span class="sc-badge" style="color:#a78bfa;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);">Creative Bold</span>
+        <span class="sc-name">中村 響</span>
+        <span class="sc-role">UIデザイナー · 5年</span>
+        <span class="sc-link">プレビューを見る ↗</span>
+      </div>
+    </a>
+
+    <!-- Medical Care — 小林 美里 -->
+    <a class="sample-card" href="sample_medical.html" target="_blank">
+      <div class="sc-preview" style="background:#f0faf8;font-family:'Noto Sans JP',sans-serif;">
+        <div style="background:#0d9488;padding:1.1rem 1.5rem .95rem;">
+          <div style="font-size:.52rem;color:rgba(255,255,255,.6);letter-spacing:.14em;margin-bottom:.38rem;text-transform:uppercase;">Certified Nurse Manager · Head Nurse</div>
+          <div style="font-family:'Bebas Neue',cursive;font-size:2rem;color:#fff;line-height:1;margin-bottom:.18rem;">小林 美里</div>
+          <div style="font-size:.54rem;color:rgba(255,255,255,.4);letter-spacing:.08em;">KOBAYASHI MISATO · 15 YEARS</div>
+        </div>
+        <div style="padding:.8rem 1.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:.55rem;margin-bottom:.55rem;">
+          <div style="background:#fff;border-radius:8px;padding:.6rem .65rem;box-shadow:0 2px 8px rgba(13,148,136,.1);">
+            <div style="font-size:.5rem;color:#0d9488;font-weight:700;margin-bottom:.18rem;">専門領域</div>
+            <div style="font-size:.63rem;color:#1e3a5f;line-height:1.3;">急性期<br>看護</div>
+          </div>
+          <div style="background:#fff;border-radius:8px;padding:.6rem .65rem;box-shadow:0 2px 8px rgba(13,148,136,.1);">
+            <div style="font-size:.5rem;color:#0d9488;font-weight:700;margin-bottom:.18rem;">管理職</div>
+            <div style="font-size:.63rem;color:#1e3a5f;line-height:1.3;">師長<br>32名統括</div>
+          </div>
+          <div style="background:#fff;border-radius:8px;padding:.6rem .65rem;box-shadow:0 2px 8px rgba(13,148,136,.1);">
+            <div style="font-size:.5rem;color:#0d9488;font-weight:700;margin-bottom:.18rem;">資格</div>
+            <div style="font-size:.63rem;color:#1e3a5f;line-height:1.3;">認定看護<br>管理者</div>
+          </div>
+        </div>
+        <div style="padding:0 1.5rem;display:flex;flex-direction:column;gap:.38rem;">
+          <div style="display:flex;gap:.48rem;align-items:center;">
+            <span style="width:17px;height:17px;background:#0d9488;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.48rem;color:#fff;flex-shrink:0;">✓</span>
+            <span style="font-size:.64rem;color:#1e3a5f;">患者満足度 92%（院内最高値・3年連続）</span>
+          </div>
+          <div style="display:flex;gap:.48rem;align-items:center;">
+            <span style="width:17px;height:17px;background:#0d9488;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.48rem;color:#fff;flex-shrink:0;">✓</span>
+            <span style="font-size:.64rem;color:#1e3a5f;">インシデント率 前年比 38%低減 達成</span>
+          </div>
+        </div>
+      </div>
+      <div class="sc-footer">
+        <span class="sc-badge" style="color:#2dd4bf;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);">Medical Care</span>
+        <span class="sc-name">小林 美里</span>
+        <span class="sc-role">認定看護管理者・病棟師長 · 15年</span>
+        <span class="sc-link">プレビューを見る ↗</span>
+      </div>
+    </a>
+
+    <!-- Academic — 高橋 誠一 -->
+    <a class="sample-card" href="sample_academic.html" target="_blank">
+      <div class="sc-preview" style="background:#faf7f0;font-family:'Lora',serif;">
+        <div style="height:3px;background:linear-gradient(90deg,#6b2737,#c9a84c,#6b2737);"></div>
+        <div style="padding:1.1rem 1.55rem .9rem;border-bottom:1px solid #e2d9c8;">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.48rem;">
+            <div style="height:1px;width:1.4rem;background:#c9a84c;opacity:.6;"></div>
+            <div style="font-family:'Noto Sans JP',sans-serif;font-size:.5rem;color:#c9a84c;letter-spacing:.17em;text-transform:uppercase;">Education Administration · ICT Policy</div>
+            <div style="height:1px;flex:1;background:#c9a84c;opacity:.6;"></div>
+          </div>
+          <div style="font-size:1.75rem;color:#6b2737;line-height:1;margin-bottom:.18rem;font-weight:700;letter-spacing:.04em;">高橋 誠一</div>
+          <div style="font-family:'Noto Sans JP',sans-serif;font-size:.54rem;color:#a0856e;letter-spacing:.1em;">TAKAHASHI SEIICHI · 25 YEARS</div>
+        </div>
+        <div style="padding:.9rem 1.55rem;display:grid;grid-template-columns:1fr 1fr;gap:1.3rem;">
+          <div>
+            <div style="font-family:'Noto Sans JP',sans-serif;font-size:.5rem;color:#c9a84c;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem;">Career</div>
+            <div style="display:flex;flex-direction:column;gap:.36rem;">
+              <div style="padding-bottom:.38rem;border-bottom:1px solid #e2d9c8;">
+                <div style="font-size:.67rem;color:#2c1810;font-weight:600;">ICT推進課長</div>
+                <div style="font-family:'Noto Sans JP',sans-serif;font-size:.54rem;color:#8a7060;">2020〜現在</div>
+              </div>
+              <div style="padding-bottom:.38rem;border-bottom:1px solid #e2d9c8;">
+                <div style="font-size:.67rem;color:#2c1810;font-weight:600;">市立中学校 教頭</div>
+                <div style="font-family:'Noto Sans JP',sans-serif;font-size:.54rem;color:#8a7060;">2016〜2020</div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Noto Sans JP',sans-serif;font-size:.5rem;color:#c9a84c;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.5rem;">Credentials</div>
+            <div style="display:flex;flex-direction:column;gap:.3rem;">
+              <div style="font-family:'Noto Sans JP',sans-serif;font-size:.64rem;color:#2c1810;padding:.22rem .5rem;border:1px solid #d4c4aa;border-radius:3px;background:#fff9f0;">中学校教諭一種（理科）</div>
+              <div style="font-family:'Noto Sans JP',sans-serif;font-size:.64rem;color:#2c1810;padding:.22rem .5rem;border:1px solid #d4c4aa;border-radius:3px;background:#fff9f0;">応用情報技術者</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="sc-footer">
+        <span class="sc-badge" style="color:#fbbf24;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);">Academic</span>
+        <span class="sc-name">高橋 誠一</span>
+        <span class="sc-role">教育行政・ICT推進（元教諭） · 25年</span>
+        <span class="sc-link">プレビューを見る ↗</span>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ③ HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="container">
+    <h2>HOW IT <span>WORKS</span></h2>
+    <div class="steps">
+      <div class="step">
+        <p class="step-num">STEP 01</p>
+        <div class="step-icon">📤</div>
+        <h3 class="step-title">ファイルをアップロード</h3>
+        <p class="step-desc">PDF・DOCX・TXT形式の履歴書・職務経歴書をドラッグ&ドロップ</p>
+      </div>
+      <div class="step">
+        <p class="step-num">STEP 02</p>
+        <div class="step-icon">🤖</div>
+        <h3 class="step-title">AIが自動で改善・選択</h3>
+        <p class="step-desc">Claude AIが実績を数値化・業種を判別してテンプレートを自動選択（約2〜5分）</p>
+      </div>
+      <div class="step">
+        <p class="step-num">STEP 03</p>
+        <div class="step-icon">⬇</div>
+        <h3 class="step-title">¥250でダウンロード</h3>
+        <p class="step-desc">ウォーターマークなし完全版HTMLをダウンロード。印刷・Web公開対応。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ④ UPLOAD -->
+<section class="upload-section" id="upload">
+  <div class="upload-inner">
+    <div class="upload-head">
+      <h2>今すぐ<span>作る</span></h2>
+      <p>履歴書・職務経歴書をアップロードしてください（最大3ファイル）</p>
+    </div>
+    <div class="upload-card">
+      <div class="file-list" id="fileList">
+        <p class="file-list-empty" id="fileListEmpty">ファイルを追加してください（最大3つ）</p>
+      </div>
+      <div class="add-file-area" id="addFileArea">
+        <input type="file" id="addFileInput" accept=".pdf,.docx,.doc,.txt,.xlsx" aria-label="ファイルを追加">
+        <span>＋ ファイルを追加</span>
+        <span class="add-file-hint" id="addFileHint">（最大3つまで）</span>
+      </div>
+      <div class="upload-btn-wrap">
+        <button class="btn btn-primary" id="uploadBtn" disabled>
+          ✦ AIでポートフォリオを生成
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© 2026 ResumeAI &nbsp;|&nbsp; Powered by Claude AI &nbsp;|&nbsp; お問い合わせ: <a href="mailto:hosinozzz@gmail.com">hosinozzz@gmail.com</a></p>
+</footer>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <p class="loading-msg" id="loadingMsg">アップロード中...</p>
+  <p class="loading-elapsed" id="loadingElapsed"></p>
+  <div class="loading-steps" id="loadingSteps">
+    <span class="step-dot" id="step1">① アップロード</span>
+    <span class="step-arrow">→</span>
+    <span class="step-dot" id="step2">② AI解析</span>
+    <span class="step-arrow">→</span>
+    <span class="step-dot" id="step3">③ 生成完了</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

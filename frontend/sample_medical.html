@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>小林 美里 — ポートフォリオ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0faf8;--bg2:#ffffff;--teal:#0d9488;--teal2:#14b8a6;--dark:#0f3d38;
+  --gray:#4d7770;--light:#94b8b4;--border:#b2dbd7;--card:#ffffff;
+  --radius:14px;--shadow:0 2px 12px rgba(13,148,136,.1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);line-height:1.8}
+.hero{padding:5rem 2rem 4rem;text-align:center;
+  background:linear-gradient(180deg,#dff5f1 0%,var(--bg) 100%);border-bottom:1px solid var(--border)}
+.hero-content{max-width:680px;margin:0 auto}
+.hero-icon{font-size:2.2rem;margin-bottom:.8rem;line-height:1}
+.hero-kana{font-size:.76rem;letter-spacing:.28em;color:var(--light);margin-bottom:.6rem}
+.hero-name{font-size:clamp(2.4rem,6vw,4rem);font-weight:700;color:var(--dark);line-height:1.15;margin-bottom:.6rem}
+.hero-badge{display:inline-flex;align-items:center;gap:.4rem;padding:.4rem 1.1rem;
+  background:var(--teal);color:#fff;border-radius:999px;font-size:.8rem;margin-bottom:1.2rem;letter-spacing:.05em}
+.hero-summary{font-size:.95rem;color:var(--gray);line-height:1.9;margin-bottom:1.4rem}
+.hero-meta{display:flex;gap:1.5rem;justify-content:center;font-size:.82rem;color:var(--light)}
+.section{padding:4.5rem 2rem}
+.section-alt{background:var(--bg2)}
+.container{max-width:880px;margin:0 auto}
+.section-title{font-size:1.3rem;font-weight:700;color:var(--teal);margin-bottom:2rem;
+  display:flex;align-items:center;gap:.8rem}
+.section-title::before{content:'';width:5px;height:1.3em;background:var(--teal);border-radius:3px;flex-shrink:0}
+.section-title span{font-size:.7rem;color:var(--light);letter-spacing:.15em;font-weight:400}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+.skill-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.3rem;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.skill-card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(13,148,136,.15)}
+.skill-header{display:flex;justify-content:space-between;margin-bottom:.6rem}
+.skill-category{font-weight:700;font-size:.9rem;color:var(--dark)}
+.skill-pct{font-size:.78rem;color:var(--teal)}
+.skill-bar{height:4px;background:rgba(13,148,136,.12);border-radius:2px;overflow:hidden;margin-bottom:.8rem}
+.skill-fill{height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--teal2));
+  border-radius:2px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag{padding:.2rem .6rem;background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2);
+  border-radius:999px;font-size:.72rem;color:var(--teal)}
+.certs-list{display:flex;flex-direction:column;gap:.7rem}
+.cert-item{display:flex;align-items:center;gap:1rem;padding:.8rem 1.2rem;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.cert-item.top{border-left:4px solid var(--teal2)}
+.cert-date{font-size:.78rem;color:var(--light);min-width:68px;flex-shrink:0}
+.cert-name{flex:1;font-size:.9rem}
+.top-badge{font-size:.66rem;padding:.12rem .45rem;background:rgba(13,148,136,.1);
+  border:1px solid rgba(13,148,136,.25);color:var(--teal);border-radius:999px}
+.timeline{position:relative;padding-left:1.8rem}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--teal),rgba(13,148,136,.1));border-radius:2px}
+.timeline-item{position:relative;margin-bottom:2.2rem;padding-left:1.5rem}
+.tl-dot{position:absolute;left:-2.2rem;top:.4rem;width:12px;height:12px;border-radius:50%;
+  background:var(--teal);border:2px solid var(--bg);box-shadow:0 0 0 2px rgba(13,148,136,.3)}
+.tl-period{font-size:.78rem;color:var(--light);margin-bottom:.2rem}
+.tl-company{font-size:1.1rem;font-weight:700;color:var(--dark);margin-bottom:.12rem}
+.tl-role{font-size:.88rem;color:var(--gray);margin-bottom:.65rem}
+.tl-bullets{list-style:none;display:flex;flex-direction:column;gap:.3rem;margin-bottom:.7rem}
+.tl-bullets li{font-size:.88rem;color:var(--gray);padding-left:.8rem;position:relative}
+.tl-bullets li::before{content:'✓';position:absolute;left:0;color:var(--teal);font-size:.82em}
+.tl-tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tag-sm{font-size:.7rem;padding:.14rem .5rem;border-radius:999px}
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;box-shadow:var(--shadow)}
+.profile-table{width:100%;border-collapse:collapse;margin-bottom:1.4rem}
+.profile-table th,.profile-table td{padding:.6rem .8rem}
+.profile-table th{text-align:left;color:var(--teal);font-size:.83rem;width:120px;font-weight:700}
+.profile-table tr:not(:last-child) td,.profile-table tr:not(:last-child) th{border-bottom:1px solid var(--border)}
+.pr-box h3{font-size:.83rem;color:var(--teal);margin-bottom:.4rem;font-weight:700}
+.pr-box p{font-size:.92rem;color:var(--gray)}
+.footer{text-align:center;padding:2rem;background:var(--dark);color:rgba(255,255,255,.5);font-size:.78rem}
+.accent{color:var(--teal2)}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:none}
+.empty{color:var(--light);font-size:.88rem}
+@media print{body{background:#fff}.hero{background:#fff;border-bottom:2px solid var(--teal)}
+  .section-alt{background:#fff}.fade-in{opacity:1!important;transform:none!important}}
+@media(max-width:600px){.skills-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="hero-content fade-in">
+    <div class="hero-icon">🏥</div>
+    <p class="hero-kana">KOBAYASHI MISATO</p>
+    <h1 class="hero-name">小林 美里</h1>
+    <p class="hero-badge">🩺 認定看護管理者・病棟師長 / 経験 15年</p>
+    <p class="hero-summary">急性期病院での看護師15年・病棟師長7年。50名の看護チームをマネジメントし、インシデント率40%削減・患者満足度スコア5年連続向上を達成。認定看護管理者として教育体制の構築と医療DX推進も担当。</p>
+    <div class="hero-meta">
+      <span>📍 大阪府大阪市</span>
+      <span>📞 080-XXXX-XXXX</span>
+    </div>
+  </div>
+</section>
+<section class="section" id="skills"><div class="container">
+  <h2 class="section-title fade-in"><span>01</span> スキル・専門領域</h2>
+  <div class="skills-grid fade-in"><div class="skill-card"><div class="skill-header"><span class="skill-category">看護・臨床</span><span class="skill-pct">95%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div><div class="skill-tags"><span class="tag">急性期看護</span> <span class="tag">術前・術後管理</span> <span class="tag">ICU看護</span> <span class="tag">救急トリアージ</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">病棟管理</span><span class="skill-pct">92%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="92"></div></div><div class="skill-tags"><span class="tag">師長業務</span> <span class="tag">シフト管理（50名）</span> <span class="tag">インシデント管理</span> <span class="tag">病床管理</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">教育・研修</span><span class="skill-pct">88%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="88"></div></div><div class="skill-tags"><span class="tag">プリセプター制度</span> <span class="tag">新人研修設計</span> <span class="tag">シミュレーション教育</span> <span class="tag">e-Learning</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">医療DX</span><span class="skill-pct">70%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div><div class="skill-tags"><span class="tag">電子カルテ（MEDIBASE）</span> <span class="tag">ナースコールシステム</span> <span class="tag">タスクシフト推進</span> <span class="tag">RPA活用</span></div></div>
+<div class="skill-card"><div class="skill-header"><span class="skill-category">患者支援</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div><div class="skill-tags"><span class="tag">退院支援</span> <span class="tag">MSW連携</span> <span class="tag">多職種カンファレンス</span> <span class="tag">家族支援</span></div></div></div>
+</div></section>
+<section class="section section-alt" id="certs"><div class="container">
+  <h2 class="section-title fade-in"><span>02</span> 資格・認定</h2>
+  <div class="certs-list fade-in"><div class="cert-item top"><span class="cert-date">2021-03</span><span class="cert-name">認定看護管理者（日本看護協会）</span><span class="top-badge">★ 主要</span></div>
+<div class="cert-item top"><span class="cert-date">2018-11</span><span class="cert-name">感染管理認定看護師</span><span class="top-badge">★ 主要</span></div>
+<div class="cert-item"><span class="cert-date">2010-04</span><span class="cert-name">看護師免許</span></div>
+<div class="cert-item"><span class="cert-date">2015-09</span><span class="cert-name">ACLS（二次救命処置）プロバイダー</span></div>
+<div class="cert-item"><span class="cert-date">2023-06</span><span class="cert-name">医療情報技師（JHIMT）</span></div></div>
+</div></section>
+<section class="section" id="career"><div class="container">
+  <h2 class="section-title fade-in"><span>03</span> 職歴</h2>
+  <div class="timeline fade-in"><div class="timeline-item"><div class="tl-dot"></div><div class="tl-content"><p class="tl-period">2018.04 – 現在</p><h3 class="tl-company">医療法人大阪中央病院（500床）</h3><p class="tl-role">病棟師長（内科・外科混合病棟）</p><ul class="tl-bullets"><li>50名の看護師チームをマネジメント（採用・育成・評価・シフト管理）</li>
+<li>医療安全委員会副委員長として院内インシデント率を40%削減</li>
+<li>電子カルテ（MEDIBASE）導入プロジェクトの看護部門リード、記録時間30%短縮</li>
+<li>新人教育プログラム再設計によりリテンション率を72%→91%に改善</li></ul><div class="tl-tags"><span class="tag tag-sm">師長業務</span> <span class="tag tag-sm">医療安全</span> <span class="tag tag-sm">電子カルテ</span> <span class="tag tag-sm">チームマネジメント</span></div></div></div>
+<div class="timeline-item"><div class="tl-dot"></div><div class="tl-content"><p class="tl-period">2010.04 – 2018.03</p><h3 class="tl-company">医療法人大阪中央病院</h3><p class="tl-role">スタッフ看護師 → 主任看護師</p><ul class="tl-bullets"><li>内科・外科混合病棟での急性期看護（術前後管理・化学療法・退院支援）</li>
+<li>プリセプターとして新人看護師8名を3年間指導</li>
+<li>感染対策チームのリンクナースとして院内感染発生率を低減</li></ul><div class="tl-tags"><span class="tag tag-sm">急性期看護</span> <span class="tag tag-sm">感染対策</span> <span class="tag tag-sm">プリセプター</span> <span class="tag tag-sm">退院支援</span></div></div></div></div>
+</div></section>
+<section class="section section-alt" id="profile"><div class="container">
+  <h2 class="section-title fade-in"><span>04</span> プロフィール</h2>
+  <div class="profile-card fade-in"><table class="profile-table"><tr><th>氏名</th><td>小林 美里&emsp;<small>KOBAYASHI MISATO</small></td></tr><tr><th>生年月日</th><td>1986年8月14日</td></tr><tr><th>所在地</th><td>大阪府大阪市</td></tr><tr><th>電話番号</th><td>080-XXXX-XXXX</td></tr></table><div class="pr-box"><h3>自己PR</h3><p>急性期病院での看護師歴15年を経て、病棟師長として50名のチームをマネジメント。患者安全と看護の質向上に一貫して取り組み、インシデント率を40%削減しました。医療DXへの関心も高く、電子カルテ導入・業務効率化の推進経験があります。</p></div></div>
+</div></section>
+<footer class="footer"><p>Generated by <span class="accent">Resume AI</span></p></footer>
+<script>
+(function(){
+  var io=new IntersectionObserver(function(e){
+    e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}});
+  },{threshold:0.12});
+  document.querySelectorAll('.fade-in').forEach(function(el){io.observe(el);});
+})();
+(function(){
+  var bio=new IntersectionObserver(function(e){
+    e.forEach(function(x){
+      if(x.isIntersecting){
+        var f=x.target.querySelector('.skill-fill');
+        if(f)f.style.width=f.dataset.pct+'%';
+        bio.unobserve(x.target);
+      }
+    });
+  },{threshold:0.3});
+  document.querySelectorAll('.skill-card').forEach(function(el){bio.observe(el);});
+})();
+</script>
+</body></html>
