@@ -83,6 +83,7 @@
   display: block; text-decoration: none;
   border-radius: var(--radius);
   overflow: hidden;
+  position: relative;
   border: 1px solid rgba(255,255,255,.07);
   box-shadow: 0 8px 28px rgba(0,0,0,.4);
   transition: transform .22s, box-shadow .22s;
@@ -93,10 +94,23 @@
 
 .sc-footer {
   display: flex; flex-direction: column; gap: .28rem;
-  padding: .85rem 1.1rem .8rem;
+  padding: 2.2rem 1.1rem .8rem;
   background: rgba(255,255,255,.04);
   border-top: 1px solid rgba(255,255,255,.07);
 }
+.sc-avatar-wrap {
+  position: absolute;
+  top: calc(196px - 28px);
+  left: 50%; transform: translateX(-50%);
+  z-index: 4;
+}
+.sc-avatar {
+  display: block; width: 56px; height: 56px; border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #0d1529;
+  box-shadow: 0 4px 16px rgba(0,0,0,.55);
+}
+
 .sc-badge {
   display: inline-block;
   font-family: 'JetBrains Mono', monospace;
@@ -293,6 +307,7 @@
         </div>
       </div>
       <div class="sc-footer">
+        <div class="sc-avatar-wrap"><img class="sc-avatar" src="images/sample_it_photo.jpg" alt="田中 健太"></div>
         <span class="sc-badge" style="color:#00d4ff;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);">Dark Tech</span>
         <span class="sc-name">田中 健太</span>
         <span class="sc-role">クラウドインフラエンジニア · 7年</span>
@@ -341,6 +356,7 @@
         </div>
       </div>
       <div class="sc-footer">
+        <div class="sc-avatar-wrap"><img class="sc-avatar" src="images/sample_business_photo.jpg" alt="鈴木 大輔"></div>
         <span class="sc-badge" style="color:#60a5fa;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);">Business Clean</span>
         <span class="sc-name">鈴木 大輔</span>
         <span class="sc-role">法人営業部長 · 16年</span>
@@ -376,6 +392,7 @@
         </div>
       </div>
       <div class="sc-footer">
+        <div class="sc-avatar-wrap"><img class="sc-avatar" src="images/sample_minimal_photo.jpg" alt="伊藤 さくら"></div>
         <span class="sc-badge" style="color:#9ca3af;background:rgba(156,163,175,.1);border:1px solid rgba(156,163,175,.25);">Minimal Pro</span>
         <span class="sc-name">伊藤 さくら</span>
         <span class="sc-role">公認会計士・経理マネージャー · 12年</span>
@@ -413,6 +430,7 @@
         </div>
       </div>
       <div class="sc-footer">
+        <div class="sc-avatar-wrap"><img class="sc-avatar" src="images/sample_creative_photo.jpg" alt="中村 響"></div>
         <span class="sc-badge" style="color:#a78bfa;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);">Creative Bold</span>
         <span class="sc-name">中村 響</span>
         <span class="sc-role">UIデザイナー · 5年</span>
@@ -454,6 +472,7 @@
         </div>
       </div>
       <div class="sc-footer">
+        <div class="sc-avatar-wrap"><img class="sc-avatar" src="images/sample_medical_photo.jpg" alt="小林 美里"></div>
         <span class="sc-badge" style="color:#2dd4bf;background:rgba(45,212,191,.1);border:1px solid rgba(45,212,191,.25);">Medical Care</span>
         <span class="sc-name">小林 美里</span>
         <span class="sc-role">認定看護管理者・病棟師長 · 15年</span>
@@ -498,6 +517,7 @@
         </div>
       </div>
       <div class="sc-footer">
+        <div class="sc-avatar-wrap"><img class="sc-avatar" src="images/sample_academic_photo.jpg" alt="高橋 誠一"></div>
         <span class="sc-badge" style="color:#fbbf24;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);">Academic</span>
         <span class="sc-name">高橋 誠一</span>
         <span class="sc-role">教育行政・ICT推進（元教諭） · 25年</span>
