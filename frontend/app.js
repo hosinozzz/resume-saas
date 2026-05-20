@@ -145,6 +145,7 @@ async function startUpload() {
       formData.append(`file_${i}`, file);
       formData.append(`label_${i}`, label);
     });
+    formData.append('template_id', window.selectedTemplate || 'auto');
 
     const res  = await fetch(UPLOAD_URL, { method: 'POST', body: formData });
     const body = await res.json();

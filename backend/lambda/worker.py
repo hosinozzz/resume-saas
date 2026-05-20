@@ -5,7 +5,7 @@ import time
 import boto3
 
 from claude_client import improve_resume
-from html_generator import generate_portfolio_html, select_template
+from html_generator import generate_portfolio_html, select_template, TEMPLATES
 from watermark import add_watermark
 
 S3 = boto3.client("s3")
@@ -38,10 +38,15 @@ def _process_record(record):
         resp = S3.get_object(Bucket=GENERATED_BUCKET, Key=s3_key)
         resume_text = resp["Body"].read().decode("utf-8")
 
-        # Claude APIで改善してHTMLを生成（職種からテンプレートを自動選択）
+        # Claude APIで改善してHTMLを生成
+        template_id = body.get("template_id", "auto")
         improved_data = improve_resume(resume_text)
-        template = select_template(improved_data)
-        print(f"[INFO] selected template: {template}")
+        if template_id and template_id != "auto" and template_id in TEMPLATES:
+            template = template_id
+            print(f"[INFO] using specified template: {template}")
+        else:
+            template = select_template(improved_data)
+            print(f"[INFO] auto-selected template: {template}")
         html_clean = generate_portfolio_html(improved_data, template)
         html_preview = add_watermark(html_clean)
 

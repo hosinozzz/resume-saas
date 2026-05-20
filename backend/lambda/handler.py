@@ -8,6 +8,8 @@ import boto3
 
 from parser import parse_resume
 
+VALID_TEMPLATE_IDS = {"auto", "dark_tech", "business_clean", "minimal_pro", "creative_bold", "medical_care", "academic"}
+
 S3 = boto3.client("s3")
 SQS = boto3.client("sqs")
 DYNAMO = boto3.resource("dynamodb")
@@ -87,6 +89,10 @@ def _handle_upload(event):
     if len(resume_text.strip()) < 50:
         return _error(400, "ファイルの内容を読み取れませんでした。docx・pdf・xlsx・txt形式のファイルをお試しください。")
 
+    template_id = _extract_text_field(raw_body, content_type, "template_id") or "auto"
+    if template_id not in VALID_TEMPLATE_IDS:
+        template_id = "auto"
+
     job_id = str(uuid.uuid4())
     text_key = f"uploaded/{job_id}/resume.txt"
 
@@ -105,7 +111,7 @@ def _handle_upload(event):
 
     SQS.send_message(
         QueueUrl=SQS_QUEUE_URL,
-        MessageBody=json.dumps({"job_id": job_id, "s3_key": text_key}),
+        MessageBody=json.dumps({"job_id": job_id, "s3_key": text_key, "template_id": template_id}),
     )
 
     return _ok({"jobId": job_id})
@@ -215,6 +221,43 @@ def _extract_multipart_files(body: bytes, content_type: str) -> list:
         result.append(entry)
 
     return result[:3]  # 最大3件
+
+
+def _extract_text_field(body: bytes, content_type: str, field_name: str) -> str | None:
+    """multipart/form-data から指定フィールドのテキスト値を抽出する。"""
+    boundary = None
+    for part in content_type.split(";"):
+        part = part.strip()
+        if part.lower().startswith("boundary="):
+            boundary = part[9:].strip('"')
+            break
+    if not boundary:
+        return None
+
+    delimiter = f"--{boundary}".encode()
+    for segment in body.split(delimiter)[1:]:
+        if segment.startswith(b"--"):
+            break
+        if b"\r\n\r\n" not in segment:
+            continue
+        header_block, content = segment.split(b"\r\n\r\n", 1)
+        header_text = header_block.decode("utf-8", errors="replace")
+
+        name = ""
+        is_file = False
+        for line in header_text.split("\r\n"):
+            if line.lower().startswith("content-disposition:"):
+                for token in line.split(";"):
+                    token = token.strip()
+                    if token.lower().startswith("name="):
+                        name = token[5:].strip('"')
+                    if token.lower().startswith("filename="):
+                        is_file = True
+
+        if name == field_name and not is_file:
+            return content.rstrip(b"\r\n").decode("utf-8", errors="replace").strip()
+
+    return None
 
 
 def _ok(body: dict):
