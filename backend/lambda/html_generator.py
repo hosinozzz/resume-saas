@@ -37,21 +37,34 @@ def select_template(data: dict) -> str:
     return 'dark_tech'
 
 
-def generate_portfolio_html(data: dict, template: str = None) -> str:
+def generate_portfolio_html(data: dict, template: str = None, photo_b64: str | None = None) -> str:
     """指定テンプレートでHTMLポートフォリオを生成する。templateがNoneなら自動選択。"""
     if template is None:
         template = select_template(data)
-    return {
+    fn = {
         'dark_tech':      _gen_dark_tech,
         'business_clean': _gen_business_clean,
         'minimal_pro':    _gen_minimal_pro,
         'creative_bold':  _gen_creative_bold,
         'medical_care':   _gen_medical_care,
         'academic':       _gen_academic,
-    }.get(template, _gen_dark_tech)(data)
+    }.get(template, _gen_dark_tech)
+    return fn(data, photo_b64=photo_b64)
 
 
 # ─── 共有ビルダー ─────────────────────────────────────────────────────────────
+
+def _build_photo(name_raw: str, photo_b64: str | None) -> str:
+    """写真またはイニシャル（フォールバック）のHTMLを返す。"""
+    if photo_b64:
+        return (
+            f'<div class="hero-photo">'
+            f'<img src="{photo_b64}" alt="プロフィール写真" class="hero-photo-img">'
+            f'</div>'
+        )
+    initial = next((ch for ch in name_raw if ch.strip()), "?")
+    return f'<div class="hero-photo hero-photo-initial"><span>{_e(initial)}</span></div>'
+
 
 def _build_skills(skills: list) -> str:
     if not skills:
@@ -245,6 +258,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--navy);color:var(--wh
 .pr-box p{font-size:.95rem;color:var(--gray)}
 .footer{text-align:center;padding:2rem;background:#050a18;color:var(--gray);font-size:.8rem}
 .accent{color:var(--cyan)}
+.hero-photo{width:120px;height:120px;border-radius:50%;margin:0 auto 1.5rem;overflow:hidden;
+  border:2px solid var(--cyan3);box-shadow:0 0 20px rgba(0,212,255,.25);
+  display:flex;align-items:center;justify-content:center;background:var(--navy3)}
+.hero-photo-img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-photo-initial{font-family:'Bebas Neue',cursive;font-size:3rem;color:var(--cyan)}
 .fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
 .fade-in.visible{opacity:1;transform:none}
 .empty{color:var(--gray);font-size:.9rem}
@@ -257,20 +275,22 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--navy);color:var(--wh
 """
 
 
-def _gen_dark_tech(data: dict) -> str:
+def _gen_dark_tech(data: dict, photo_b64: str | None = None) -> str:
     profile   = data.get('profile', {})
     summary   = _e(data.get('summary', ''))
     skills    = data.get('skills', [])
     certs     = data.get('certifications', [])
     career    = data.get('career', [])
     meta      = data.get('meta', {})
-    name      = _e(profile.get('name', ''))
+    name_raw  = profile.get('name', '')
+    name      = _e(name_raw)
     kana      = _e(profile.get('kana', ''))
     dob       = _e(profile.get('dob', ''))
     location  = _e(profile.get('location', ''))
     tel       = _e(profile.get('tel', ''))
     job_type  = _e(meta.get('job_type', 'エンジニア'))
     exp_years = meta.get('experience_years', 0)
+    photo_html = _build_photo(name_raw, photo_b64)
 
     return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -286,6 +306,7 @@ def _gen_dark_tech(data: dict) -> str:
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-content fade-in">
+    {photo_html}
     <p class="hero-kana">{kana}</p>
     <h1 class="hero-name">{name}</h1>
     <p class="hero-badge">{job_type} / 経験 {exp_years}年</p>
@@ -332,7 +353,7 @@ html{scroll-behavior:smooth}
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);line-height:1.75}
 .accent-top{height:5px;background:linear-gradient(90deg,var(--navy),var(--blue))}
 .hero{background:var(--bg2);padding:4rem 2rem 3.5rem;border-bottom:1px solid var(--border)}
-.hero-inner{max-width:920px;margin:0 auto;display:grid;grid-template-columns:auto 1fr;gap:3rem;align-items:center}
+.hero-inner{max-width:920px;margin:0 auto;display:grid;grid-template-columns:auto auto 1fr;gap:2rem;align-items:center}
 .hero-name{font-size:clamp(2rem,5vw,3.4rem);font-weight:700;color:var(--navy);line-height:1.15;margin-bottom:.4rem}
 .hero-kana{font-size:.8rem;color:var(--gray);letter-spacing:.1em;margin-bottom:.7rem}
 .hero-badge{display:inline-block;padding:.35rem 1rem;background:var(--navy);color:#fff;font-size:.75rem;border-radius:4px;letter-spacing:.05em}
@@ -389,6 +410,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .pr-box p{font-size:.92rem;color:var(--gray)}
 .footer{text-align:center;padding:2rem;background:var(--navy);color:rgba(255,255,255,.55);font-size:.78rem}
 .accent{color:rgba(147,197,253,1)}
+.hero-photo{width:110px;height:110px;border-radius:50%;overflow:hidden;flex-shrink:0;
+  border:3px solid var(--navy);box-shadow:0 4px 16px rgba(0,0,0,.12);
+  display:flex;align-items:center;justify-content:center;background:var(--bg2)}
+.hero-photo-img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-photo-initial{font-size:2.4rem;font-weight:700;color:var(--navy)}
 .fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
 .fade-in.visible{opacity:1;transform:none}
 .empty{color:var(--gray);font-size:.88rem}
@@ -400,19 +426,21 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 """
 
 
-def _gen_business_clean(data: dict) -> str:
+def _gen_business_clean(data: dict, photo_b64: str | None = None) -> str:
     profile   = data.get('profile', {})
     summary   = _e(data.get('summary', ''))
     skills    = data.get('skills', [])
     certs     = data.get('certifications', [])
     career    = data.get('career', [])
     meta      = data.get('meta', {})
-    name      = _e(profile.get('name', ''))
+    name_raw  = profile.get('name', '')
+    name      = _e(name_raw)
     kana      = _e(profile.get('kana', ''))
     location  = _e(profile.get('location', ''))
     tel       = _e(profile.get('tel', ''))
     job_type  = _e(meta.get('job_type', ''))
     exp_years = meta.get('experience_years', 0)
+    photo_html = _build_photo(name_raw, photo_b64)
 
     return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -428,6 +456,7 @@ def _gen_business_clean(data: dict) -> str:
 <div class="accent-top"></div>
 <section class="hero">
   <div class="hero-inner">
+    <div class="fade-in">{photo_html}</div>
     <div class="fade-in">
       <p class="hero-kana">{kana}</p>
       <h1 class="hero-name">{name}</h1>
@@ -528,6 +557,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink)
 .pr-box p{font-size:.92rem;color:var(--mid);line-height:1.95}
 .footer{text-align:center;padding:3rem 2rem;color:var(--light);font-size:.75rem;border-top:1px solid var(--border)}
 .accent{color:var(--ink)}
+.hero-photo{width:100px;height:100px;border-radius:50%;margin:0 auto 2rem;overflow:hidden;
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;background:var(--bg2)}
+.hero-photo-img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-photo-initial{font-size:2.2rem;font-weight:300;color:var(--ink)}
 .fade-in{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
 .fade-in.visible{opacity:1;transform:none}
 .empty{color:var(--light);font-size:.88rem}
@@ -536,19 +569,21 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--ink)
 """
 
 
-def _gen_minimal_pro(data: dict) -> str:
+def _gen_minimal_pro(data: dict, photo_b64: str | None = None) -> str:
     profile   = data.get('profile', {})
     summary   = _e(data.get('summary', ''))
     skills    = data.get('skills', [])
     certs     = data.get('certifications', [])
     career    = data.get('career', [])
     meta      = data.get('meta', {})
-    name      = _e(profile.get('name', ''))
+    name_raw  = profile.get('name', '')
+    name      = _e(name_raw)
     kana      = _e(profile.get('kana', ''))
     location  = _e(profile.get('location', ''))
     tel       = _e(profile.get('tel', ''))
     job_type  = _e(meta.get('job_type', ''))
     exp_years = meta.get('experience_years', 0)
+    photo_html = _build_photo(name_raw, photo_b64)
 
     return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -564,6 +599,7 @@ def _gen_minimal_pro(data: dict) -> str:
 <section class="hero">
   <div class="container">
     <div class="fade-in">
+      {photo_html}
       <p class="hero-kana">{kana}</p>
       <h1 class="hero-name">{name}</h1>
       <div class="hero-divider"></div>
@@ -679,6 +715,11 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .pr-box p{font-size:.92rem;color:var(--gray)}
 .footer{text-align:center;padding:2rem;background:#030008;color:var(--dim);font-size:.78rem}
 .accent{color:var(--pink)}
+.hero-photo{width:128px;height:128px;border-radius:50%;margin:0 auto 1.5rem;overflow:hidden;
+  border:2px solid var(--purple);box-shadow:0 0 24px rgba(139,92,246,.35);
+  display:flex;align-items:center;justify-content:center;background:rgba(139,92,246,.1)}
+.hero-photo-img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-photo-initial{font-family:'Bebas Neue',cursive;font-size:3rem;color:var(--purple)}
 .fade-in{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
 .fade-in.visible{opacity:1;transform:none}
 .empty{color:var(--dim);font-size:.88rem}
@@ -689,19 +730,21 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 """
 
 
-def _gen_creative_bold(data: dict) -> str:
+def _gen_creative_bold(data: dict, photo_b64: str | None = None) -> str:
     profile   = data.get('profile', {})
     summary   = _e(data.get('summary', ''))
     skills    = data.get('skills', [])
     certs     = data.get('certifications', [])
     career    = data.get('career', [])
     meta      = data.get('meta', {})
-    name      = _e(profile.get('name', ''))
+    name_raw  = profile.get('name', '')
+    name      = _e(name_raw)
     kana      = _e(profile.get('kana', ''))
     location  = _e(profile.get('location', ''))
     tel       = _e(profile.get('tel', ''))
     job_type  = _e(meta.get('job_type', ''))
     exp_years = meta.get('experience_years', 0)
+    photo_html = _build_photo(name_raw, photo_b64)
 
     return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -716,6 +759,7 @@ def _gen_creative_bold(data: dict) -> str:
 <body>
 <section class="hero">
   <div class="hero-content fade-in">
+    {photo_html}
     <p class="hero-kana">{kana}</p>
     <h1 class="hero-name">{name}</h1>
     <p class="hero-badge">{job_type} / {exp_years}年のキャリア</p>
@@ -821,6 +865,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark
 .pr-box p{font-size:.92rem;color:var(--gray)}
 .footer{text-align:center;padding:2rem;background:var(--dark);color:rgba(255,255,255,.5);font-size:.78rem}
 .accent{color:var(--teal2)}
+.hero-photo{width:120px;height:120px;border-radius:50%;margin:0 auto 1.2rem;overflow:hidden;
+  border:3px solid var(--teal);box-shadow:0 0 18px rgba(13,148,136,.25);
+  display:flex;align-items:center;justify-content:center;background:var(--bg2)}
+.hero-photo-img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-photo-initial{font-size:2.8rem;font-weight:700;color:var(--teal)}
 .fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
 .fade-in.visible{opacity:1;transform:none}
 .empty{color:var(--light);font-size:.88rem}
@@ -830,19 +879,21 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark
 """
 
 
-def _gen_medical_care(data: dict) -> str:
+def _gen_medical_care(data: dict, photo_b64: str | None = None) -> str:
     profile   = data.get('profile', {})
     summary   = _e(data.get('summary', ''))
     skills    = data.get('skills', [])
     certs     = data.get('certifications', [])
     career    = data.get('career', [])
     meta      = data.get('meta', {})
-    name      = _e(profile.get('name', ''))
+    name_raw  = profile.get('name', '')
+    name      = _e(name_raw)
     kana      = _e(profile.get('kana', ''))
     location  = _e(profile.get('location', ''))
     tel       = _e(profile.get('tel', ''))
     job_type  = _e(meta.get('job_type', ''))
     exp_years = meta.get('experience_years', 0)
+    photo_html = _build_photo(name_raw, photo_b64)
 
     return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -857,7 +908,7 @@ def _gen_medical_care(data: dict) -> str:
 <body>
 <section class="hero">
   <div class="hero-content fade-in">
-    <div class="hero-icon">🏥</div>
+    {photo_html}
     <p class="hero-kana">{kana}</p>
     <h1 class="hero-name">{name}</h1>
     <p class="hero-badge">🩺 {job_type} / 経験 {exp_years}年</p>
@@ -961,6 +1012,11 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark
 .pr-box p{font-size:.92rem;color:var(--gray)}
 .footer{text-align:center;padding:2rem;background:var(--dark);color:var(--light);font-size:.78rem;border-top:3px solid var(--burgundy)}
 .accent{color:var(--gold)}
+.hero-photo{width:120px;height:120px;border-radius:50%;margin:0 auto 1.2rem;overflow:hidden;
+  border:2px solid var(--gold);box-shadow:0 4px 16px rgba(107,39,55,.15);
+  display:flex;align-items:center;justify-content:center;background:var(--bg2)}
+.hero-photo-img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-photo-initial{font-size:2.8rem;font-weight:700;color:var(--burgundy)}
 .fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
 .fade-in.visible{opacity:1;transform:none}
 .empty{color:var(--light);font-size:.88rem}
@@ -970,19 +1026,21 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark
 """
 
 
-def _gen_academic(data: dict) -> str:
+def _gen_academic(data: dict, photo_b64: str | None = None) -> str:
     profile   = data.get('profile', {})
     summary   = _e(data.get('summary', ''))
     skills    = data.get('skills', [])
     certs     = data.get('certifications', [])
     career    = data.get('career', [])
     meta      = data.get('meta', {})
-    name      = _e(profile.get('name', ''))
+    name_raw  = profile.get('name', '')
+    name      = _e(name_raw)
     kana      = _e(profile.get('kana', ''))
     location  = _e(profile.get('location', ''))
     tel       = _e(profile.get('tel', ''))
     job_type  = _e(meta.get('job_type', ''))
     exp_years = meta.get('experience_years', 0)
+    photo_html = _build_photo(name_raw, photo_b64)
 
     return f"""<!DOCTYPE html>
 <html lang="ja">
@@ -999,6 +1057,7 @@ def _gen_academic(data: dict) -> str:
 <div class="deco-gold"></div>
 <section class="hero">
   <div class="hero-content fade-in">
+    {photo_html}
     <div class="hero-crest">⚜</div>
     <p class="hero-kana">{kana}</p>
     <h1 class="hero-name">{name}</h1>

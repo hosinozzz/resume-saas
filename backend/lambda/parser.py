@@ -1,22 +1,22 @@
 import io
 
 
-def parse_resume(body: bytes, content_type: str, filename: str = "") -> str:
+def parse_resume(body: bytes, content_type: str, filename: str = "") -> tuple[str, str | None]:
     """
-    アップロードされたファイルからプレーンテキストを抽出する。
-    content_type またはファイル名の拡張子で形式を判定。
+    アップロードされたファイルからテキストと写真（base64 data URL）を抽出する。
+    写真抽出はdocxのみ対応。戻り値: (text, photo_b64 or None)
     """
     ct = content_type.lower()
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
 
     if "pdf" in ct or ext == "pdf":
-        return _parse_pdf(body)
+        return _parse_pdf(body), None
     elif "wordprocessingml" in ct or "docx" in ct or ext == "docx":
         return _parse_docx(body)
     elif "spreadsheetml" in ct or ext == "xlsx":
-        return _parse_xlsx(body)
+        return _parse_xlsx(body), None
     else:
-        return _parse_txt(body)
+        return _parse_txt(body), None
 
 
 def _parse_pdf(body: bytes) -> str:
@@ -31,7 +31,8 @@ def _parse_pdf(body: bytes) -> str:
     return "\n\n".join(pages)
 
 
-def _parse_docx(body: bytes) -> str:
+def _parse_docx(body: bytes) -> tuple[str, str | None]:
+    import base64
     from docx import Document
 
     doc = Document(io.BytesIO(body))
@@ -49,7 +50,21 @@ def _parse_docx(body: bytes) -> str:
             if cells:
                 lines.append(" | ".join(cells))
 
-    return "\n".join(lines)
+    # ドキュメント内の最初の画像をbase64 data URLで抽出
+    photo_b64 = None
+    try:
+        for rel in doc.part.rels.values():
+            if "image" in rel.reltype:
+                image_part = rel.target_part
+                mime = image_part.content_type  # e.g. "image/jpeg"
+                img_bytes = image_part.blob
+                b64 = base64.b64encode(img_bytes).decode("ascii")
+                photo_b64 = f"data:{mime};base64,{b64}"
+                break
+    except Exception as e:
+        print(f"[WARN] docx image extraction failed: {e}")
+
+    return "\n".join(lines), photo_b64
 
 
 def _parse_xlsx(body: bytes) -> str:

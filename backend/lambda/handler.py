@@ -134,10 +134,13 @@ def _handle_upload(event):
 
     # 各ファイルのテキスト抽出 → ラベル付きで結合
     sections = []
+    photo_b64 = None  # docxから抽出した最初の顔写真
     for entry in file_entries:
-        text = parse_resume(entry["body"], entry["content_type"], entry["filename"])
+        text, photo = parse_resume(entry["body"], entry["content_type"], entry["filename"])
         if text and text.strip():
             sections.append(f"【{entry['label']}】\n{text.strip()}")
+        if photo and not photo_b64:
+            photo_b64 = photo
 
     resume_text = "\n\n".join(sections)
     if len(resume_text.strip()) < 50:
@@ -157,6 +160,17 @@ def _handle_upload(event):
         ContentType="text/plain; charset=utf-8",
     )
 
+    # 写真があればS3に保存（TTLはresumeテキストと同じ2時間）
+    photo_key = None
+    if photo_b64:
+        photo_key = f"uploaded/{job_id}/photo.txt"
+        S3.put_object(
+            Bucket=GENERATED_BUCKET,
+            Key=photo_key,
+            Body=photo_b64.encode("utf-8"),
+            ContentType="text/plain; charset=utf-8",
+        )
+
     _job_table().put_item(Item={
         "pk": f"job#{job_id}",
         "status": "pending",
@@ -165,7 +179,12 @@ def _handle_upload(event):
 
     SQS.send_message(
         QueueUrl=SQS_QUEUE_URL,
-        MessageBody=json.dumps({"job_id": job_id, "s3_key": text_key, "template_id": template_id}),
+        MessageBody=json.dumps({
+            "job_id": job_id,
+            "s3_key": text_key,
+            "template_id": template_id,
+            "photo_key": photo_key,
+        }),
     )
 
     return _ok({"jobId": job_id})

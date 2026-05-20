@@ -30,6 +30,7 @@ def _process_record(record):
     body = json.loads(record["body"])
     job_id = body["job_id"]
     s3_key = body["s3_key"]
+    photo_key = body.get("photo_key")
 
     try:
         _update_job(job_id, {"status": "processing"})
@@ -37,6 +38,15 @@ def _process_record(record):
         # S3からパース済み履歴書テキストを取得
         resp = S3.get_object(Bucket=GENERATED_BUCKET, Key=s3_key)
         resume_text = resp["Body"].read().decode("utf-8")
+
+        # 写真データを取得（docxのみ存在）
+        photo_b64 = None
+        if photo_key:
+            try:
+                photo_resp = S3.get_object(Bucket=GENERATED_BUCKET, Key=photo_key)
+                photo_b64 = photo_resp["Body"].read().decode("utf-8")
+            except Exception as e:
+                print(f"[WARN] photo fetch failed: {e}")
 
         # Claude APIで改善してHTMLを生成
         template_id = body.get("template_id", "auto")
@@ -47,7 +57,7 @@ def _process_record(record):
         else:
             template = select_template(improved_data)
             print(f"[INFO] auto-selected template: {template}")
-        html_clean = generate_portfolio_html(improved_data, template)
+        html_clean = generate_portfolio_html(improved_data, template, photo_b64=photo_b64)
         html_preview = add_watermark(html_clean)
 
         # S3に保存
