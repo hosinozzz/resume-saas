@@ -47,3 +47,13 @@ output "cost_alert_sns_arn" {
   description = "コストアラートSNSトピックARN（メール購読はAWSコンソールから設定）"
   value       = aws_sns_topic.cost_alert.arn
 }
+
+output "route53_zone_id" {
+  description = "resumeai.jp Route53ホスティングゾーンID"
+  value       = aws_route53_zone.main.zone_id
+}
+
+output "route53_name_servers" {
+  description = "resumeai.jp のNSレコード（ドメインレジストラに設定する4つのネームサーバー）"
+  value       = aws_route53_zone.main.name_servers
+}

@@ -134,6 +134,14 @@ module "api_gateway" {
 # ──────────────────────────────────────────
 # SES: お問い合わせメール送信元アドレス検証
 # ──────────────────────────────────────────
+# ──────────────────────────────────────────
+# Route53: resumeai.jp パブリックホスティングゾーン
+# ──────────────────────────────────────────
+resource "aws_route53_zone" "main" {
+  name    = "resumeai.jp"
+  comment = "resumeai.jp public hosted zone"
+}
+
 resource "aws_ses_email_identity" "contact" {
   email = "hosinozzz@gmail.com"
 }
