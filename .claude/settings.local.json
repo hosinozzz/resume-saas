@@ -49,7 +49,12 @@
       "Bash(aws cloudfront list-conflicting-aliases *)",
       "Bash(aws cloudfront *)",
       "Bash(aws route53 change-resource-record-sets *)",
-      "Bash(aws route53 *)"
+      "Bash(aws route53 *)",
+      "Bash(dig TXT resumeai.jp @8.8.8.8 +short)",
+      "Bash(dig TXT www.resumeai.jp @8.8.8.8 +short)",
+      "Bash(Resolve-DnsName *)",
+      "PowerShell(Resolve-DnsName *)",
+      "Bash(git *)"
     ]
   }
 }
