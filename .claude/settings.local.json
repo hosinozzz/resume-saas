@@ -54,7 +54,9 @@
       "Bash(dig TXT www.resumeai.jp @8.8.8.8 +short)",
       "Bash(Resolve-DnsName *)",
       "PowerShell(Resolve-DnsName *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(python *)",
+      "Bash(pip install *)"
     ]
   }
 }
